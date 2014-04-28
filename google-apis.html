@@ -1,0 +1,48 @@
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
+The complete set of authors may be found at http://polymer.github.io/AUTHORS
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS
+-->
+<link rel="import" href="../core-shared-lib/core-shared-lib.html">
+
+<!--
+Dynamically loads the Google Client JavaScript API, firing the `api-load` event when ready.
+
+Any number of components can use `<google-client-api>` elements, and the library will only be loaded once.
+
+@element google-client-api
+-->
+<polymer-element name="google-client-api" extends="core-shared-lib">
+<script>
+  Polymer({
+    defaultUrl: 'https://apis.google.com/js/client.js?onload=%%callback%%',
+    notifyEvent: 'api-load',
+    get api() {
+      return gapi.client;
+    }
+  });
+</script>
+</polymer-element>
+
+<!--
+Dynamically loads the Google+ JavaScript API, firing the `api-load` event when ready.
+
+Any number of components can use `<google-plusone-api>` elements, and the library will only be loaded once.
+
+@element google-plusone-api
+-->
+<polymer-element name="google-plusone-api" extends="core-shared-lib">
+<script>
+  Polymer({
+    defaultUrl: 'https://apis.google.com/js/plusone.js?onload=%%callback%%',
+    notifyEvent: 'api-load',
+    get api() {
+      return gapi.hangout;
+    }
+  });
+</script>
+</polymer-element>
+
