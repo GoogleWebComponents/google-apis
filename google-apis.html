@@ -86,3 +86,27 @@ Any number of components can use `<google-youtube-api>` elements, and the librar
 </script>
 </polymer-element>
 
+<!--
+Dynamically loads the Google Maps JavaScript API, firing the `api-load` event when ready.
+
+Any number of components can use `<google-maps-api>` elements, and the library will only be loaded once.
+
+@element google-maps-api
+-->
+<polymer-element name="google-maps-api" extends="core-shared-lib" attributes="version sensor">
+<script>
+  Polymer({
+    defaultUrl: 'https://maps.googleapis.com/maps/api/js?libraries=places&callback=%%callback%%',
+    version: '3.exp',
+    sensor: false,
+    notifyEvent: 'api-load',
+    ready: function() {
+      this.url = this.defaultUrl + '&v=' + this.version + '&sensor=' + this.sensor;
+    },
+    get api() {
+      return google.maps;
+    }
+  });
+</script>
+</polymer-element>
+
