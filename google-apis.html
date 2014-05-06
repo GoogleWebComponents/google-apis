@@ -22,7 +22,7 @@ Any number of components can use `<google-client-api>` elements, and the library
 <script>
   Polymer({
     defaultUrl: 'https://apis.google.com/js/client.js?onload=%%callback%%',
-    notifyEvent: 'api-load',
+    notifyEvent: 'client-api-load',
     get api() {
       return gapi.client;
     }
@@ -42,7 +42,7 @@ Any number of components can use `<google-jsapi>` elements, and the library will
 <script>
   Polymer({
     defaultUrl: 'https://www.google.com/jsapi?callback=%%callback%%',
-    notifyEvent: 'api-load',
+    notifyEvent: 'js-api-load',
     get api() {
       return google;
     }
@@ -62,7 +62,7 @@ Any number of components can use `<google-plusone-api>` elements, and the librar
 <script>
   Polymer({
     defaultUrl: 'https://apis.google.com/js/plusone.js?onload=%%callback%%',
-    notifyEvent: 'api-load',
+    notifyEvent: 'plusone-api-load',
     get api() {
       return gapi.hangout;
     }
@@ -81,7 +81,7 @@ Any number of components can use `<google-youtube-api>` elements, and the librar
 <script>
   Polymer({
     defaultUrl: 'https://www.youtube.com/iframe_api',
-    notifyEvent: 'api-load',
+    notifyEvent: 'youtube-api-load',
     callbackName: 'onYouTubeIframeAPIReady',
     get api() {
       return YT;
@@ -149,7 +149,7 @@ Fired when the Maps API library is loaded and ready.
      */
     sensor: false,
 
-    notifyEvent: 'api-load',
+    notifyEvent: 'maps-api-load',
 
     ready: function() {
       var url = this.defaultUrl + '&v=' + this.version + '&sensor=' + this.sensor;
