@@ -2,6 +2,7 @@
   "name": "google-apis",
   "private": true,
   "dependencies": {
-    "core-shared-lib": "Polymer/core-shared-lib#master"
-  }
+    "core-shared-lib": "Polymer/core-shared-lib#0.2.4"
+  },
+  "version": "0.2.4"
 }
