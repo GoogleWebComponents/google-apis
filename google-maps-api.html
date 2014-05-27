@@ -36,7 +36,7 @@ Fired when the Maps API library is loaded and ready.
 @event api-load
 -->
 
-<polymer-element name="google-maps-api" extends="core-shared-lib" attributes="version sensor apiKey">
+<polymer-element name="google-maps-api" extends="core-shared-lib" attributes="version sensor apiKey clientId">
 <script>
 
   Polymer({
@@ -50,6 +50,13 @@ Fired when the Maps API library is loaded and ready.
      * @type string
      */
     apiKey: null,
+    
+   /**
+     * A Maps API for Business client id. To obtain a Maps API for Business client id, see developers.google.com/maps/documentation/business/
+     * @attribute clientId
+     * @type string
+     */
+    clientId: null,
 
     /**
      * Version of the Maps API to use.
@@ -75,6 +82,9 @@ Fired when the Maps API library is loaded and ready.
       var url = this.defaultUrl + '&v=' + this.version + '&sensor=' + this.sensor;
       if (this.apiKey) {
         url += '&key=' + this.apiKey;
+      }
+      if (this.clientId) {
+        url += '&client=' + this.clientId;  
       }
       this.url = url;
     },
