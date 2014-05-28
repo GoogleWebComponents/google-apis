@@ -52,7 +52,9 @@ Fired when the Maps API library is loaded and ready.
     apiKey: null,
     
    /**
-     * A Maps API for Business client id. To obtain a Maps API for Business client id, see developers.google.com/maps/documentation/business/
+     * A Maps API for Business Client ID. To obtain a Maps API for Business Client ID, see developers.google.com/maps/documentation/business/.
+     * If set, a Client ID will take precedence over an API Key.
+     *
      * @attribute clientId
      * @type string
      */
@@ -80,7 +82,7 @@ Fired when the Maps API library is loaded and ready.
 
     ready: function() {
       var url = this.defaultUrl + '&v=' + this.version + '&sensor=' + this.sensor;
-      if (this.apiKey) {
+      if (this.apiKey && !this.clientId) {
         url += '&key=' + this.apiKey;
       }
       if (this.clientId) {
