@@ -36,7 +36,7 @@ Fired when the Maps API library is loaded and ready.
 @event api-load
 -->
 
-<polymer-element name="google-maps-api" extends="core-shared-lib" attributes="version sensor apiKey clientId">
+<polymer-element name="google-maps-api" extends="core-shared-lib" attributes="version apiKey clientId">
 <script>
 
   Polymer({
@@ -69,19 +69,10 @@ Fired when the Maps API library is loaded and ready.
      */
     version: '3.exp',
 
-    /**
-     * If set, indicates a sensor (such as a GPS locator) was used to determine the user's location.
-     *
-     * @attribute sensor
-     * @type boolean
-     * @default false
-     */
-    sensor: false,
-
     notifyEvent: 'api-load',
 
     ready: function() {
-      var url = this.defaultUrl + '&v=' + this.version + '&sensor=' + this.sensor;
+      var url = this.defaultUrl + '&v=' + this.version;
       if (this.apiKey && !this.clientId) {
         url += '&key=' + this.apiKey;
       }
