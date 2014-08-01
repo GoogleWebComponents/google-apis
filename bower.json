@@ -26,6 +26,6 @@
     "apis"
   ],
   "dependencies": {
-    "core-shared-lib": "Polymer/core-shared-lib#master"
+    "core-shared-lib": "Polymer/core-shared-lib#~0.3.4"
   }
 }
