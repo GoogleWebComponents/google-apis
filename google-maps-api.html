@@ -36,12 +36,12 @@ Fired when the Maps API library is loaded and ready.
 @event api-load
 -->
 
-<polymer-element name="google-maps-api" extends="core-shared-lib" attributes="version apiKey clientId">
+<polymer-element name="google-maps-api" extends="core-shared-lib" attributes="version apiKey clientId libraries">
 <script>
 
   Polymer({
 
-    defaultUrl: 'https://maps.googleapis.com/maps/api/js?libraries=places&callback=%%callback%%',
+    defaultUrl: 'https://maps.googleapis.com/maps/api/js?callback=%%callback%%',
 
     /**
      * A Maps API key. To obtain an API key, see developers.google.com/maps/documentation/javascript/tutorial#api_key.
@@ -50,7 +50,7 @@ Fired when the Maps API library is loaded and ready.
      * @type string
      */
     apiKey: null,
-    
+
    /**
      * A Maps API for Business Client ID. To obtain a Maps API for Business Client ID, see developers.google.com/maps/documentation/business/.
      * If set, a Client ID will take precedence over an API Key.
@@ -59,6 +59,15 @@ Fired when the Maps API library is loaded and ready.
      * @type string
      */
     clientId: null,
+
+    /**
+     * The libraries to load with this api. Defaults to places. For more information
+     * https://developers.google.com/maps/documentation/javascript/libraries
+     *
+     * @attribute libraries
+     * @type string
+     */
+    libraries: "places",
 
     /**
      * Version of the Maps API to use.
@@ -73,11 +82,12 @@ Fired when the Maps API library is loaded and ready.
 
     ready: function() {
       var url = this.defaultUrl + '&v=' + this.version;
+      url += "&libraries=" + this.libraries;
       if (this.apiKey && !this.clientId) {
         url += '&key=' + this.apiKey;
       }
       if (this.clientId) {
-        url += '&client=' + this.clientId;  
+        url += '&client=' + this.clientId;
       }
       this.url = url;
     },
