@@ -55,7 +55,7 @@ Element for loading a specific Google API with the Javascript client library.
 @homepage http://polymerlabs.github.io/google-apis
 -->
 <polymer-element name="google-api-loader"
-                 attributes="name version root"
+                 attributes="name version appId"
                  extends="google-client-api"
                  on-api-load="{{doneLoadingClient}}">
 <script>
@@ -103,10 +103,8 @@ Element for loading a specific Google API with the Javascript client library.
       version: '',
 
       /**
-       * Root URL for loading a Google Cloud Endpoints API.
-       * A valid root URL looks like this:
-       * 'https://your_app_id.appspot.com/_ah/api'
-       * @attribute root
+       * App Engine application ID for loading a Google Cloud Endpoints API.
+       * @attribute appId
        * @type string
        */
 
@@ -195,10 +193,14 @@ Element for loading a specific Google API with the Javascript client library.
             this.fireError();
           // Otherwise, looks like we're loading a new API.
           } else {
+            var root;
+            if (this.appId) {
+              root = 'https://' + this.appId + '.appspot.com/_ah/api';
+            }
             statuses_[this.name] = 'loading';
             loaders_[this.name] = this;
             gapi.client.load(this.name, this.version,
-                this.handleLoadResponse.bind(this), this.root);
+                this.handleLoadResponse.bind(this), root);
           }
         }
       }
