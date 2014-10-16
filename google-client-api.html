@@ -55,7 +55,7 @@ Element for loading a specific Google API with the Javascript client library.
 @homepage http://polymerlabs.github.io/google-apis
 -->
 <polymer-element name="google-api-loader"
-                 attributes="name version appId"
+                 attributes="name version appId root"
                  extends="google-client-api"
                  on-api-load="{{doneLoadingClient}}">
 <script>
@@ -107,6 +107,17 @@ Element for loading a specific Google API with the Javascript client library.
        * @attribute appId
        * @type string
        */
+      appId: null,
+
+      /**
+       * Root URL where to load the API from, e.g. 'http://host/apis'.
+       * For App Engine dev server this would be something like:
+       * 'http://localhost:8080/_ah/api'.
+       * Overrides 'appId' if both are specified.
+       * @attribute root
+       * @type string
+       */
+      root: null,
 
       // Used to fix events potentially being fired multiple times by
       // core-shared-lib.
@@ -194,7 +205,9 @@ Element for loading a specific Google API with the Javascript client library.
           // Otherwise, looks like we're loading a new API.
           } else {
             var root;
-            if (this.appId) {
+            if (this.root) {
+              root = this.root
+            } else if (this.appId) {
               root = 'https://' + this.appId + '.appspot.com/_ah/api';
             }
             statuses_[this.name] = 'loading';
