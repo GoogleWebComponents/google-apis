@@ -1,6 +1,6 @@
 {
   "name": "google-apis",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "homepage": "http://googlewebcomponents.github.io/google-apis",
   "description": "Web components to load Google API libraries",
   "main": "google-apis.html",
