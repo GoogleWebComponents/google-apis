@@ -16,13 +16,26 @@ Dynamically loads the Google Youtube Iframe API, firing the `api-load` event whe
 Any number of components can use `<google-youtube-api>` elements, and the library will only be loaded once.
 
 @element google-youtube-api
+@extends core-shared-lib
+@homepage https://googlewebcomponents.github.io/google-apis
 -->
 <polymer-element name="google-youtube-api" extends="core-shared-lib">
 <script>
   Polymer({
     defaultUrl: 'https://www.youtube.com/iframe_api',
+    /**
+     * Fired when the API library is loaded and available.
+     * @event api-load
+     */
     notifyEvent: 'api-load',
+
     callbackName: 'onYouTubeIframeAPIReady',
+		
+    /**
+     * Wrapper for `YT` API object.
+     * @property api
+     * @type YT
+     */
     get api() {
       return YT;
     }

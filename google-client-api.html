@@ -15,17 +15,45 @@ Dynamically loads the Google Client JavaScript API, firing the `api-load` event 
 
 Any number of components can use `<google-client-api>` elements, and the library will only be loaded once.
 
+##### Example
+
+    <google-client-api></google-client-api>
+    <script>
+      var client = document.querySelector('google-client-api');
+      client.addEventListener('api-load', function(e) {
+        // this.api === gapi.client
+        // this.auth === gapi.auth
+      });
+    </script>
+
 @element google-client-api
 @extends core-shared-lib
+@homepage https://googlewebcomponents.github.io/google-apis
 -->
 <polymer-element name="google-client-api" extends="core-shared-lib">
 <script>
   Polymer({
     defaultUrl: 'https://apis.google.com/js/client.js?onload=%%callback%%',
+    
+    /**
+     * Fired when the API library is loaded and available.
+     * @event api-load
+     */
     notifyEvent: 'api-load',
+
+    /**
+     * Wrapper for `gapi.client`.
+     * @property api
+     * @type gapi.client
+     */
     get api() {
       return gapi.client;
     },
+    /**
+     * Wrapper for `gapi.auth`.
+     * @property auth
+     * @type gapi.auth
+     */
     get auth() {
       return gapi.auth;
     }
@@ -38,21 +66,24 @@ Element for loading a specific Google API with the Javascript client library.
 
 ##### Example
 
-    <google-api-loader id="shortener" name="urlshortener" version="v1">
-    </google-api-loader>
+    <google-api-loader id="shortener" name="urlshortener"
+                       version="v1"></google-api-loader>
 
     <script>
       var shortener = document.getElementById('shortener');
       shortener.addEventListener('google-api-load', function(event) {
-        var request = shortener.api.url.get({'shortUrl': 'http://goo.gl/fbsS'});
-        request.execute(function(resp) { console.log(resp); });
+        var request = shortener.api.url.get({
+           shortUrl: 'http://goo.gl/fbsS'
+        });
+        request.execute(function(resp) {
+          console.log(resp);
+        });
       });
     </script>
 
 @element google-api-loader
-@status alpha
 @extends google-client-api
-@homepage http://polymerlabs.github.io/google-apis
+@homepage https://googlewebcomponents.github.io/google-apis
 -->
 <polymer-element name="google-api-loader"
                  attributes="name version appId root"
@@ -73,12 +104,14 @@ Element for loading a specific Google API with the Javascript client library.
 
     Polymer('google-api-loader', {
       /**
-       * Fired when the requested API is loaded.
+       * Fired when the requested API is loaded. Override this name
+       * by setting `successEventName`. 
        * @event google-api-load
        */
 
       /**
-       * Fired if an error occurs while loading the requested API.
+       * Fired if an error occurs while loading the requested API. Override this name
+       * by setting `errorEventName`. 
        * @event google-api-load-error
        */
 
@@ -123,12 +156,26 @@ Element for loading a specific Google API with the Javascript client library.
       // core-shared-lib.
       waiting: false,
 
+      /**
+       * Used to override the event that is fired when the API lib is successfully loaded.
+       * @property successEventName
+       * @type string
+       * @default 'google-api-load'
+       */
       successEventName: 'google-api-load',
+      
+      /**
+       * Used to override the event that is fired when there is an error loading the API.
+       * @property errorEventName
+       * @type string
+       * @default 'google-api-load-error'
+       */
       errorEventName: 'google-api-load-error',
 
       /**
        * Returns the loaded API.
-       * @method api
+       * @property api
+       * @type gapi.client
        */
       get api() {
         if (window.gapi && window.gapi.client &&
