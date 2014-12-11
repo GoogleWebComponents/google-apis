@@ -36,7 +36,7 @@ Fired when the Maps API library is loaded and ready.
 @event api-load
 -->
 
-<polymer-element name="google-maps-api" extends="core-shared-lib" attributes="version apiKey clientId libraries language">
+<polymer-element name="google-maps-api" extends="core-shared-lib" attributes="version apiKey clientId libraries language signedIn">
 <script>
 
   Polymer({
@@ -92,6 +92,16 @@ Fired when the Maps API library is loaded and ready.
      */
     language: null,
 
+    /**
+     * If true, sign-in is enabled.
+     * See https://developers.google.com/maps/documentation/javascript/signedin#enable_sign_in
+     *
+     * @attribute signedIn
+     * @type boolean
+     * @default false
+     */
+    signedIn: false,
+
     notifyEvent: 'api-load',
 
     ready: function() {
@@ -108,6 +118,10 @@ Fired when the Maps API library is loaded and ready.
 
       if (this.language) {
         url += '&language=' + this.language;
+      }
+
+      if (this.signedIn) {
+	url += '&signed_in=' + this.signedIn;
       }
 
       this.url = url;
