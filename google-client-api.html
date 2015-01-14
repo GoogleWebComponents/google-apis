@@ -30,16 +30,107 @@ Any number of components can use `<google-client-api>` elements, and the library
 @extends core-shared-lib
 @homepage https://googlewebcomponents.github.io/google-apis
 -->
-<polymer-element name="google-client-api" extends="core-shared-lib">
+<!--
+Fired when an OAuth response token includes an access token.
+
+@event client-authorized
+@param {Object} detail
+  @param {boolean} detail.immediate If true, the token was requested without a UI.
+  @param {Object} detail.token The OAuth response token (see https://developers.google.com/api-client-library/javascript/reference/referencedocs#OAuth20TokenObject).
+-->
+<!--
+Fired when an OAuth response token includes an error.
+
+@event client-authorization-error
+@param {Object} detail
+  @param {boolean} detail.immediate If true, the token was requested without a UI.
+  @param {Object} detail.token The OAuth response token (see https://developers.google.com/api-client-library/javascript/reference/referencedocs#OAuth20TokenObject).
+-->
+<polymer-element name="google-client-api" extends="core-shared-lib"
+                 attributes="apiKey clientId scopes cors">
 <script>
   Polymer({
     defaultUrl: 'https://apis.google.com/js/client.js?onload=%%callback%%',
-    
+
     /**
      * Fired when the API library is loaded and available.
      * @event api-load
      */
     notifyEvent: 'api-load',
+
+    /**
+     * API key obtained from the Google Developers Console (https://console.developers.google.com).
+     * Note: Since client configuration is global (not API-specific), this value will by used by all
+     * APIs.  It's not possible to use separate keys for each API.
+     * @attribute apiKey
+     * @type string
+     */
+    apiKey: '',
+
+    /**
+     * Client identifier obtained from the Google Developers Console
+     * (https://console.developers.google.com). If set, then OAuth will be used for authentication.
+     * Note: Since client configuration is global (not API-specific), this value will by used by all
+     * APIs.  It's not possible to use separate authentication models for each API.
+     * @attribute apiKey
+     * @type string
+     */
+    clientId: '',
+
+    /**
+     * Space-delimited list of scopes to authorize (OAuth only).
+     * Note: Since client configuration is global (not API-specific), this value will by used by all
+     * APIs.  It's not possible to use separate scopes for each API.
+     * @attribute apiKey
+     * @type string
+     */
+    scopes: '',
+
+    /**
+     * Whether to use CORS.
+     * Note: Since client configuration is global (not API-specific), this value will by used by all
+     * APIs.  It's not possible to use separate behaviors for each API.
+     * @attribute cors
+     * @type boolean
+     * @default false
+     */
+    cors: false,
+
+    created: function() {
+      // Configure client as soon as it's loaded.
+      this.addEventListener(this.notifyEvent, function() {
+        if (this.apiKey) {
+          gapi.client.setApiKey(this.apiKey);
+        }
+        if (this.clientId) {
+          // Attempt "immediate" OAuth check (use existing refresh token to get an access token).
+          this.authorize(true);
+        }
+        if (this.useCors) {
+          gapi.config.update('client/cors', true);
+        }
+      }.bind(this));
+    },
+
+    /**
+     * Initiates OAuth authorization.
+     *
+     * @method authorize
+     * @param {boolean} immediate If true, performs immediate authorization. Use false when
+     *     calling from a UI element.
+     */
+    authorize: function(immediate) {
+      gapi.auth.authorize({
+        client_id: this.clientId,
+        scope: this.scopes,
+        immediate: immediate
+      }, function(token) {
+        this.fire(token && !token.error ? 'client-authorized' : 'client-authorization-error', {
+          immediate: immediate,
+          token: token
+        });
+      }.bind(this));
+    },
 
     /**
      * Wrapper for `gapi.client`.
@@ -105,13 +196,13 @@ Element for loading a specific Google API with the Javascript client library.
     Polymer('google-api-loader', {
       /**
        * Fired when the requested API is loaded. Override this name
-       * by setting `successEventName`. 
+       * by setting `successEventName`.
        * @event google-api-load
        */
 
       /**
        * Fired if an error occurs while loading the requested API. Override this name
-       * by setting `errorEventName`. 
+       * by setting `errorEventName`.
        * @event google-api-load-error
        */
 
@@ -163,7 +254,7 @@ Element for loading a specific Google API with the Javascript client library.
        * @default 'google-api-load'
        */
       successEventName: 'google-api-load',
-      
+
       /**
        * Used to override the event that is fired when there is an error loading the API.
        * @property errorEventName
