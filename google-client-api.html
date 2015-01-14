@@ -147,6 +147,14 @@ Fired when an OAuth response token includes an error.
      */
     get auth() {
       return gapi.auth;
+    },
+      /**
+       * Wrapper for `gapi.config`.
+       * @property config
+       * @type gapi.config
+       */
+      get config() {
+        return gapi.config;
     }
   });
 </script>
