@@ -49,105 +49,139 @@ Fired when an OAuth response token includes an error.
 <polymer-element name="google-client-api" extends="core-shared-lib"
                  attributes="apiKey clientId scopes cors">
 <script>
-  Polymer({
-    defaultUrl: 'https://apis.google.com/js/client.js?onload=%%callback%%',
+  (function() {
+    // Stores whether an authorization attempt is in progress.
+    var authorizing_ = false;
 
-    /**
-     * Fired when the API library is loaded and available.
-     * @event api-load
-     */
-    notifyEvent: 'api-load',
+    // Stores the immediate flag used in the last/current authorization attempt.
+    var immediate_ = true;
 
-    /**
-     * API key obtained from the Google Developers Console (https://console.developers.google.com).
-     * Note: Since client configuration is global (not API-specific), this value will by used by all
-     * APIs.  It's not possible to use separate keys for each API.
-     * @attribute apiKey
-     * @type string
-     */
-    apiKey: '',
+    // Stores the last known authorization state.
+    var authState_ = {
+      immediate: false,
+      token: null,
+      authorized: false
+    };
 
-    /**
-     * Client identifier obtained from the Google Developers Console
-     * (https://console.developers.google.com). If set, then OAuth will be used for authentication.
-     * Note: Since client configuration is global (not API-specific), this value will by used by all
-     * APIs.  It's not possible to use separate authentication models for each API.
-     * @attribute apiKey
-     * @type string
-     */
-    clientId: '',
+    Polymer({
+      defaultUrl: 'https://apis.google.com/js/client.js?onload=%%callback%%',
 
-    /**
-     * Space-delimited list of scopes to authorize (OAuth only).
-     * Note: Since client configuration is global (not API-specific), this value will by used by all
-     * APIs.  It's not possible to use separate scopes for each API.
-     * @attribute apiKey
-     * @type string
-     */
-    scopes: '',
+      /**
+       * Fired when the API library is loaded and available.
+       * @event api-load
+       */
+      notifyEvent: 'api-load',
 
-    /**
-     * Whether to use CORS.
-     * Note: Since client configuration is global (not API-specific), this value will by used by all
-     * APIs.  It's not possible to use separate behaviors for each API.
-     * @attribute cors
-     * @type boolean
-     * @default false
-     */
-    cors: false,
+      /**
+       * API key obtained from the Google Developers Console
+       * (https://console.developers.google.com).
+       * Note: Since client configuration is global (not API-specific), this value will by used by
+       * all APIs.  It's not possible to use separate keys for each API.
+       * @attribute apiKey
+       * @type string
+       */
+      apiKey: '',
 
-    created: function() {
-      // Configure client as soon as it's loaded.
-      this.addEventListener(this.notifyEvent, function() {
-        if (this.apiKey) {
-          gapi.client.setApiKey(this.apiKey);
+      /**
+       * Client identifier obtained from the Google Developers Console
+       * (https://console.developers.google.com). If set, then OAuth will be used for
+       * authentication.
+       * Note: Since client configuration is global (not API-specific), this value will by used by
+       * all APIs.  It's not possible to use separate authentication models for each API.
+       * @attribute apiKey
+       * @type string
+       */
+      clientId: '',
+
+      /**
+       * Space-delimited list of scopes to authorize (OAuth only).
+       * Note: Since client configuration is global (not API-specific), this value will by used by
+       * all APIs.  It's not possible to use separate scopes for each API.
+       * @attribute apiKey
+       * @type string
+       */
+      scopes: '',
+
+      /**
+       * Whether to use CORS.
+       * Note: Since client configuration is global (not API-specific), this value will by used by
+       * all APIs.  It's not possible to use separate behaviors for each API.
+       * @attribute cors
+       * @type boolean
+       * @default false
+       */
+      cors: false,
+
+      created: function() {
+        // Configure client as soon as it's loaded.
+        this.addEventListener(this.notifyEvent, function() {
+          if (this.apiKey) {
+            gapi.client.setApiKey(this.apiKey);
+          }
+          if (this.clientId) {
+            // Attempt "immediate" OAuth check (use existing refresh token to get an access token).
+            this.authorize(true);
+          }
+          if (this.useCors) {
+            gapi.config.update('client/cors', true);
+          }
+        }.bind(this));
+
+        // Watch for changes to authorization state (which could be made by another instance).
+        Object.observe(authState_, function(changes) {
+          this.fire(authState_.authorized ? 'client-authorized' : 'client-authorization-error',
+              authState_);
+        }.bind(this));
+      },
+
+      /**
+       * Initiates OAuth authorization.
+       *
+       * @method authorize
+       * @param {boolean} immediate If true, performs immediate authorization. Use false when
+       *     calling from a UI element.
+       */
+      authorize: function(immediate) {
+        if (!authorizing_) {
+          authorizing_ = true;
+          immediate_ = immediate;
+          gapi.auth.authorize({
+            client_id: this.clientId,
+            scope: this.scopes,
+            immediate: immediate
+          }, this.setToken);
         }
-        if (this.clientId) {
-          // Attempt "immediate" OAuth check (use existing refresh token to get an access token).
-          this.authorize(true);
-        }
-        if (this.useCors) {
-          gapi.config.update('client/cors', true);
-        }
-      }.bind(this));
-    },
+      },
 
-    /**
-     * Initiates OAuth authorization.
-     *
-     * @method authorize
-     * @param {boolean} immediate If true, performs immediate authorization. Use false when
-     *     calling from a UI element.
-     */
-    authorize: function(immediate) {
-      gapi.auth.authorize({
-        client_id: this.clientId,
-        scope: this.scopes,
-        immediate: immediate
-      }, function(token) {
-        this.fire(token && !token.error ? 'client-authorized' : 'client-authorization-error', {
-          immediate: immediate,
-          token: token
-        });
-      }.bind(this));
-    },
+      /**
+       * Sets the authorization token.
+       *
+       * @method setToken
+       * @param {Object} token The token.
+       */
+      setToken: function(token) {
+        authState_.immediate = immediate_;
+        authState_.token = token;
+        authState_.authorized = token && !token.error;
+        authorizing_ = false;
+      },
 
-    /**
-     * Wrapper for `gapi.client`.
-     * @property api
-     * @type gapi.client
-     */
-    get api() {
-      return gapi.client;
-    },
-    /**
-     * Wrapper for `gapi.auth`.
-     * @property auth
-     * @type gapi.auth
-     */
-    get auth() {
-      return gapi.auth;
-    },
+      /**
+       * Wrapper for `gapi.client`.
+       * @property api
+       * @type gapi.client
+       */
+      get api() {
+        return gapi.client;
+      },
+      /**
+       * Wrapper for `gapi.auth`.
+       * @property auth
+       * @type gapi.auth
+       */
+      get auth() {
+        return gapi.auth;
+      },
       /**
        * Wrapper for `gapi.config`.
        * @property config
@@ -155,8 +189,9 @@ Fired when an OAuth response token includes an error.
        */
       get config() {
         return gapi.config;
-    }
-  });
+      }
+    });
+  })();
 </script>
 </polymer-element>
 
