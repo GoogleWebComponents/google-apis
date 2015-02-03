@@ -8,7 +8,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../core-shared-lib/core-shared-lib.html">
+<link rel="import" href="google-js-api.html">
 
 <!--
 Dynamically loads the Google Client JavaScript API, firing the `api-load` event when ready.
@@ -27,14 +27,24 @@ Any number of components can use `<google-client-api>` elements, and the library
     </script>
 
 @element google-client-api
-@extends core-shared-lib
 @homepage https://googlewebcomponents.github.io/google-apis
 -->
-<polymer-element name="google-client-api" extends="core-shared-lib">
+<polymer-element name="google-client-api">
+  <template>
+    <google-js-api on-js-api-load="{{loadClient}}"></google-js-api>
+  </template>
 <script>
   Polymer({
-    defaultUrl: 'https://apis.google.com/js/client.js?onload=%%callback%%',
-    
+    /**
+     * Loads the client library when the api js has loaded.
+     */
+    loadClient: function() {
+      var self = this;
+      gapi.load("client", function() {
+        self.fire(self.notifyEvent, arguments);
+      });
+    },
+
     /**
      * Fired when the API library is loaded and available.
      * @event api-load

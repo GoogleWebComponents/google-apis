@@ -25,5 +25,19 @@
       console.log(e.target.localName + ' loaded');
     });
   </script>
+
+  <google-api-loader id="shortener" name="urlshortener"
+                       version="v1"></google-api-loader>
+  <script>
+    var shortener = document.getElementById('shortener');
+    shortener.addEventListener('google-api-load', function(event) {
+      var request = shortener.api.url.get({
+        shortUrl: 'http://goo.gl/fbsS'
+      })
+      request.execute(function(resp) {
+        console.log(resp);
+      });
+    });
+  </script>
 </body>
 </html>
