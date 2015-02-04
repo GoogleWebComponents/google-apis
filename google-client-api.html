@@ -39,10 +39,9 @@ Any number of components can use `<google-client-api>` elements, and the library
      * Loads the client library when the api js has loaded.
      */
     loadClient: function() {
-      var self = this;
       gapi.load("client", function() {
-        self.fire(self.notifyEvent, arguments);
-      });
+        this.fire(this.notifyEvent, arguments);
+      }.bind(this));
     },
 
     /**
@@ -234,11 +233,10 @@ Element for loading a specific Google API with the Javascript client library.
       },
 
       createSelfRemovingListener: function(eventName) {
-        var self = this;
         var handler = function () {
-          loaders_[self.name].removeEventListener(eventName, handler);
-          self.loadApi();
-        };
+          loaders_[this.name].removeEventListener(eventName, handler);
+          this.loadApi();
+        }.bind(this);
 
         return handler;
       },
