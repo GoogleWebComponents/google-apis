@@ -4,17 +4,18 @@
 <head>
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>google-apis Demo</title>
-  <script src="../webcomponentsjs/webcomponents.min.js"></script>
-  <link rel="import" href="google-apis.html">
+  <script src="../webcomponentsjs/webcomponents.js"></script>
+  <!-- <link rel="import" href="google-apis.html"> -->
+  <link rel="import" href="google-youtube-api.html">
 </head>
 <body>
 
-  <google-client-api></google-client-api>
+<!--   <google-client-api></google-client-api>
   <google-jsapi></google-jsapi>
   <google-maps-api></google-maps-api>
   <google-plusone-api></google-plusone-api>
   <google-realtime-api></google-realtime-api>
-  <google-youtube-api></google-youtube-api>
+ -->  <google-youtube-api></google-youtube-api>
 
   <div></div>
 
@@ -26,7 +27,7 @@
     });
   </script>
 
-  <google-api-loader id="shortener" name="urlshortener"
+<!--   <google-api-loader id="shortener" name="urlshortener"
                      version="v1"></google-api-loader>
   <script>
     var shortener = document.getElementById('shortener');
@@ -39,5 +40,5 @@
       });
     });
   </script>
-</body>
+ --></body>
 </html>

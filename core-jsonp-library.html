@@ -1,0 +1,153 @@
+<!--
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+
+(function() {
+  "use strict";
+  Polymer.Core = Polymer.Core || {};
+
+  /**
+    `Polymer.Core.JSONPLibrary` library mixin replaces core-shared-lib
+
+    Supports sharing a JSONP-based JavaScript library.
+  
+    Example:
+
+    Polymer({
+
+    });  
+
+    <core-shared-lib on-core-shared-lib-load="{{load}}" url="https://apis.google.com/js/plusone.js?onload=%%callback%%">
+
+    Multiple components can request a library using a `JSONPLibrary` mixin and only one copy of that library will
+    loaded from the network.
+
+    Some libraries require a specific global function be defined. If this is the case, specify the `callbackName` property.
+
+    Where possible, you should use an HTML Import to load library dependencies. Rather than using this element,
+    create an import (`<link rel="import" href="lib.html">`) that wraps loading the .js file:
+
+   */
+  Polymer.Core.JSONPLibrary = {
+    // loads the library, and fires this.notifyEvent upon completion
+    load: function() {
+      if (!this.url && this.defaultUrl)
+        this.url = this.defaultUrl;
+      Singleton.require( this.url, 
+        function(result) {
+          this.fire( this.notifyEvent, result);
+        }.bind(this),
+        this.callbackName
+      );
+    }
+  }
+
+  /*
+   * Singleton keeps track of all Loaders
+   */
+  var Singleton = {
+    apiMap: {}, // { hash -> Loader }
+
+    /* 
+     * @param {function} notifyCallback loaded callback fn(result)
+     * @param {string} jsonpCallbackName name of jsonpcallback. If API does not provide it, leave empty. Optional.
+     */
+    require: function(url, notifyCallback, jsonpCallbackName) {
+
+      // make hashable string form url
+      var name = this.nameFromUrl(url);
+
+      // create a loader as needed
+      if (!this.apiMap[name])
+        this.apiMap[name] = new Loader(name, url, jsonpCallbackName);
+
+      // ask for notification
+      this.apiMap[name].requestNotify(notifyCallback);
+    },
+
+    nameFromUrl: function(url) {
+      return url.replace(/[\:\/\%\?\&\.\=\-\,]/g, '_') + '_api';
+    }
+  };
+
+  var Loader = function(name, url, callbackName) {
+    this.notifiers = [];  // array of notifyFn [ notifyFn* ]
+
+    // callback is specified either as callback name
+    // or computed dynamically if url has callbackMacro in it
+    if (!callbackName) {
+      if (url.indexOf(this.callbackMacro) >= 0) {
+        callbackName = name + '_loaded';
+        url = url.replace(this.callbackMacro, this.callbackName);
+      } else {
+        // TODO(sjmiles): we should probably fallback to listening to script.load
+        throw 'core-shared-api: a %%callback%% parameter is required in the API url';
+      }
+    }
+    this.callbackName = callbackName;
+    window[this.callbackName] = this.success.bind(this);
+    //
+    this.addScript(url);
+  };
+  
+  Loader.prototype = {
+    
+    callbackMacro: '%%callback%%',
+    loaded: false,
+    
+    addScript: function(src) {
+      var script = document.createElement('script');
+      script.src = src;
+      script.onerror = this.error.bind(this);
+      var s = document.querySelector('script');
+      s.parentNode.insertBefore(script, s);
+      this.script = script;
+    },
+    
+    removeScript: function() {
+      if (this.script.parentNode) {
+        this.script.parentNode.removeChild(this.script);
+      }
+      this.script = null;
+    },
+    
+    error: function() {
+      this.cleanup();
+    },
+    
+    success: function() {
+      this.loaded = true;
+      this.cleanup();
+      this.result = Array.prototype.slice.call(arguments);
+      this.notifiers.forEach(this.notify, this);
+      this.notifiers = null;
+    },
+    
+    cleanup: function() {
+      delete window[this.callbackName];
+    },
+
+    notify: function(notifyCallback) {
+      notifyCallback(this.result);
+    },
+    
+    requestNotify: function(notifyCallback) {
+      if (this.loaded) {
+        this.notify(notifyCallback);
+      } else {
+        this.notifiers.push(notifyCallback);
+      }
+    }
+    
+  };
+})();
+</script>
