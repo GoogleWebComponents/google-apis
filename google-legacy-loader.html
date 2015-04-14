@@ -8,33 +8,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../core-shared-lib/core-shared-lib.html">
+<link rel="import" href="core-jsonp-library.html">
 
 <!--
 Dynamically loads the legacy Google JavaScript API Loader (https://developers.google.com/loader/),
 firing the `api-load` event when ready.
 
-Any number of components can use `<google-jsapi>` elements, and the library will only be loaded once.
+Any number of components can use `<google-legacy-loader>` elements, and the library will only be loaded once.
 
-@element google-jsapi
-@extends core-shared-lib
+@element google-legacy-loader
 @homepage https://googlewebcomponents.github.io/google-apis
 -->
-<polymer-element name="google-jsapi" extends="core-shared-lib">
 <script>
   Polymer({
-    defaultUrl: 'https://www.google.com/jsapi?callback=%%callback%%',
+    is: 'google-legacy-loader',
+
+    mixins: [
+      Polymer.Core.JSONPLibrary
+    ],
+
+    properties: {
+      defaultUrl: {
+        type: String,
+        value: 'https://www.google.com/jsapi?callback=%%callback%%'
+      },
 		
-		/**
-		 * Fired when the API library is loaded and available.
-		 * @event api-load
-		 */
-    notifyEvent: 'api-load',
-		
-		/**
-		 * Wrapper for `google` API namespace.
-		 * @property api
-		 */
+	   	/**
+  		 * Fired when the API library is loaded and available.
+  		 * @event api-load
+  		 */
+      notifyEvent: {
+        type: String,
+        value: 'api-load'
+      },
+  		
+    },
+
+    ready: function() {
+      this.load();
+    },
+    /**
+     * Wrapper for `google` API namespace.
+     * @property api
+     */
     get api() {
       return google;
     }

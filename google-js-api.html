@@ -8,8 +8,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../core-shared-lib/core-shared-lib.html">
-
+<link rel="import" href="core-jsonp-library.html">
 <!--
 Dynamically loads the Google JavaScript API, firing the `api-load` event when ready.
 
@@ -29,16 +28,32 @@ Any number of components can use `<google-js-api>` elements, and the library wil
 @extends core-shared-lib
 @homepage https://googlewebcomponents.github.io/google-apis
 -->
-<polymer-element name="google-js-api" extends="core-shared-lib">
 <script>
   Polymer({
-    defaultUrl: 'https://apis.google.com/js/api.js?onload=%%callback%%',
-    
-    /**
-     * Fired when the API library is loaded and available.
-     * @event js-api-load
-     */
-    notifyEvent: 'js-api-load'
+    is: 'google-js-api',
+
+    mixins: [
+      Polymer.Core.JSONPLibrary
+    ],
+
+    properties: {
+      defaultUrl: {
+        type: String,
+        value: 'https://apis.google.com/js/api.js?onload=%%callback%%'
+      },
+      
+      /**
+       * Fired when the API library is loaded and available.
+       * @event js-api-load
+       */
+      notifyEvent: {
+        type: String,
+        value:'js-api-load'
+      }
+    },
+
+    ready: function() {
+      this.load();
+    }
   });
 </script>
-</polymer-element>

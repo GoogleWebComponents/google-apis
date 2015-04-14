@@ -1,0 +1,88 @@
+✓ google-youtube
+✓ core-localstorage
+✓ google-streetview-pano
+✓ google-castable-video
++ google-apis
++ google-map
++ google-chart
+✓ google-url-shortener
+✓ core-signals
+x google-signin blocked on paper-button, core-signal, template="if"
+    google-analytics
+    google-calendar
+    google-drive
+    google-youtube-upload
+    google-hangout-button
+    google-sheets
+
+other:
+Google Elements port
+
+properties: left nulls as undefined, instead of declaring value
+
+1) google-apis https://github.com/atotic/google-apis
+core-shared-lib is no longer there. No more custom element inheritance, need a mixin
+Name it: Polymer.Core.JSONPLibrary
+Because mixin:
+- make Loader take callback, not object.method
+renamed google-jsapi to google-legacy-loader (otherwise we end up with google-js-api and google-jsapi)
+Buffalo buffalo Buffalo buffalo buffalo buffalo Buffalo buffalo
+renamed google-api-loader to google-client-loader for readability
+
+1.1) google-youtube https://github.com/atotic/google-youtube
+google-youtube.html FIXME
+_determinePlaySupported adds video to body, not shadowDom for feature detection
+<template if="{{thumbnail}}"> commented out, not sure what 0.8 if is
+needs my core-localstorage port
+
+1.2) google-signin
+NOGO: needs paper-button port
+
+1.3) google-youtube-upload
+NOGO: needs google-signin
+
+1.4) google-maps https://github.com/atotic/google-map
+moved google-map-marker outside of google-map
+onMutation not supported. Use MutationObserver instead
+markers do not appear unless dom=shadow. Is it because <content select=google-map-marker>?
+google-map-directions
+  attribute startAddress can be string|google.maps.LatLng. Declaring it as Object makes attribute parse fail. SHould it be declared as string?
+tests:
+  marker removal tests fails, because getDistributedNodes() returns obsolete list. Should updateMarkers do querySelector() instead?
+
+1.5) google-streetview-pano https://github.com/atotic/google-streetview-pano
+changed panoid to panoId for sanity's sake
+
+1.6) google-chart https://github.com/atotic/google-chart
+data attribute: how to declare it? It can be array or string. Declaring it as array makes string fail, declaring as string makes array fail
+
+1.7) google-castable-video https://github.com/atotic/google-castable-video
+super() call does not exist in 0.8. Is:
+Object.getPrototypeOf(Object.getPrototypeOf(this)).pause.call(this); acceptable?
+
+1.8) google-url-shortener https://github.com/atotic/google-url-shortener
+- added new properties: shortUrl, error
+- reworked demo, so it does not need custom elements (x-autobind instead)
+did not test successfully because I do not have correct API key
+
+1.9) core-signals
+google-signin dependency
+
+1.10) google-signin
+google-signin-aware broadcasts core-signal with google-auth-request to update scopes. Why do it through events, and not
+as a binding on google-signin?
+
+0.8 bummers:
+
+Annotated computed properties do not display error if property is undefined. Bit me in google-signin
+No <template if=""> substitute. hidden
+No sub-property event handlers ($.player.playVideo)
+sub-property event handlers have no brackets "{{handleEvent}}" vs "handleEvent"
+Can't declare elements in top-level document is annoying in demos
+<body fullbleed> fullbleed attribute missing in 0.8
+ <script> Polymer = { dom: 'shadow' }; </script> does not work ?dom=shadow works
+ How do we declare multi-type attributes? 
+How to call super on upgraded video element?
+General architecture: google-apis, why use elements instead of js libraries? Elements should be used when:
+- there is a UI
+- to expose bindings

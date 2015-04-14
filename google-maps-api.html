@@ -8,7 +8,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../core-shared-lib/core-shared-lib.html">
+<link rel="import" href="core-jsonp-library.html">
 
 <!--
 Dynamically loads the Google Maps JavaScript API, firing the `api-load` event when ready.
@@ -36,73 +36,96 @@ Fired when the Maps API library is loaded and ready.
 @event api-load
 -->
 
-<polymer-element name="google-maps-api" extends="core-shared-lib" attributes="version apiKey clientId libraries language signedIn">
 <script>
 
   Polymer({
 
-    defaultUrl: 'https://maps.googleapis.com/maps/api/js?callback=%%callback%%',
+    is: 'google-maps-api',
 
-    /**
-     * A Maps API key. To obtain an API key, see developers.google.com/maps/documentation/javascript/tutorial#api_key.
-     *
-     * @attribute apiKey
-     * @type string
-     */
-    apiKey: null,
+    mixins: [
+      Polymer.Core.JSONPLibrary
+    ],
 
-   /**
-     * A Maps API for Business Client ID. To obtain a Maps API for Business Client ID, see developers.google.com/maps/documentation/business/.
-     * If set, a Client ID will take precedence over an API Key.
-     *
-     * @attribute clientId
-     * @type string
-     */
-    clientId: null,
+    properties: {
 
-    /**
-     * The libraries to load with this map. Defaults to "places". For more information
-     * see https://developers.google.com/maps/documentation/javascript/libraries.
-     *
-     * @attribute libraries
-     * @type string
-     * @default "places"
-     */
-    libraries: "places",
+      defaultUrl: {
+        type: String,
+        value: 'https://maps.googleapis.com/maps/api/js?callback=%%callback%%'
+      },
 
-    /**
-     * Version of the Maps API to use.
-     *
-     * @attribute version
-     * @type string
-     * @default '3.exp'
-     */
-    version: '3.exp',
+      /**
+       * A Maps API key. To obtain an API key, see developers.google.com/maps/documentation/javascript/tutorial#api_key.
+       *
+       * @attribute apiKey
+       * @type string
+       */
+      apiKey: String,
 
-    /**
-     * The localized language to load the Maps API with. For more information
-     * see https://developers.google.com/maps/documentation/javascript/basics#Language
-     *
-     * Note: the Maps API defaults to the preffered language setting of the browser.
-     * Use this parameter to override that behavior.
-     *
-     * @attribute language
-     * @type string
-     * @default null
-     */
-    language: null,
+      /**
+       * A Maps API for Business Client ID. To obtain a Maps API for Business Client ID, see developers.google.com/maps/documentation/business/.
+       * If set, a Client ID will take precedence over an API Key.
+       *
+       * @attribute clientId
+       * @type string
+       */
+      clientId: String,
 
-    /**
-     * If true, sign-in is enabled.
-     * See https://developers.google.com/maps/documentation/javascript/signedin#enable_sign_in
-     *
-     * @attribute signedIn
-     * @type boolean
-     * @default false
-     */
-    signedIn: false,
+      /**
+       * The libraries to load with this map. Defaults to "places". For more information
+       * see https://developers.google.com/maps/documentation/javascript/libraries.
+       *
+       * @attribute libraries
+       * @type string
+       * @default "places"
+       */
+      libraries: {
+        type: String,
+        value: "places"
+      },
 
-    notifyEvent: 'api-load',
+      /**
+       * Version of the Maps API to use.
+       *
+       * @attribute version
+       * @type string
+       * @default '3.exp'
+       */
+      version: {
+        type: String,
+        value: '3.exp'
+      },
+
+      /**
+       * The localized language to load the Maps API with. For more information
+       * see https://developers.google.com/maps/documentation/javascript/basics#Language
+       *
+       * Note: the Maps API defaults to the preffered language setting of the browser.
+       * Use this parameter to override that behavior.
+       *
+       * @attribute language
+       * @type string
+       * @default null
+       */
+      language: String,
+
+      /**
+       * If true, sign-in is enabled.
+       * See https://developers.google.com/maps/documentation/javascript/signedin#enable_sign_in
+       *
+       * @attribute signedIn
+       * @type boolean
+       * @default false
+       */
+      signedIn: {
+        type: Boolean,
+        value: false
+      },
+
+      notifyEvent: {
+        type: String,
+        value: 'api-load'
+      }
+    },
 
     ready: function() {
       var url = this.defaultUrl + '&v=' + this.version;
@@ -121,10 +144,10 @@ Fired when the Maps API library is loaded and ready.
       }
 
       if (this.signedIn) {
-	url += '&signed_in=' + this.signedIn;
+        url += '&signed_in=' + this.signedIn;
       }
-
       this.url = url;
+      this.load();
     },
 
     /**
@@ -138,4 +161,3 @@ Fired when the Maps API library is loaded and ready.
     }
   });
 </script>
-</polymer-element>
