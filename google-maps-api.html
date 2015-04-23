@@ -41,7 +41,7 @@ Fired when the Maps API library is loaded and ready.
 
     is: 'google-maps-api',
 
-    mixins: [
+    behaviors: [
       Polymer.Core.JSONPLibrary
     ],
 
@@ -58,7 +58,10 @@ Fired when the Maps API library is loaded and ready.
        * @attribute apiKey
        * @type string
        */
-      apiKey: String,
+      apiKey: {
+        type: String,
+        value: ''
+      },
 
       /**
        * A Maps API for Business Client ID. To obtain a Maps API for Business Client ID, see developers.google.com/maps/documentation/business/.
@@ -67,7 +70,10 @@ Fired when the Maps API library is loaded and ready.
        * @attribute clientId
        * @type string
        */
-      clientId: String,
+      clientId: {
+        type: String,
+        value: ''
+      },
 
       /**
        * The libraries to load with this map. Defaults to "places". For more information
@@ -105,8 +111,10 @@ Fired when the Maps API library is loaded and ready.
        * @type string
        * @default null
        */
-      language: String,
-
+      language: {
+        type: String,
+        value: ''
+      },
       /**
        * If true, sign-in is enabled.
        * See https://developers.google.com/maps/documentation/javascript/signedin#enable_sign_in
@@ -123,30 +131,34 @@ Fired when the Maps API library is loaded and ready.
       notifyEvent: {
         type: String,
         value: 'api-load'
+      },
+
+      url: {
+        type: String,
+        computed: 'computeUrl(defaultUrl, version, apiKey, clientId, language, signedIn)'
       }
     },
 
-    ready: function() {
-      var url = this.defaultUrl + '&v=' + this.version;
-      url += "&libraries=" + this.libraries;
+    computeUrl: function(defaultUrl, version, libraries, apiKey, clientId, language, signedIn) {
+      var url = defaultUrl + '&v=' + version;
+      url += "&libraries=" + libraries;
 
-      if (this.apiKey && !this.clientId) {
-        url += '&key=' + this.apiKey;
+      if (apiKey && !clientId) {
+        url += '&key=' + apiKey;
       }
 
-      if (this.clientId) {
-        url += '&client=' + this.clientId;
+      if (clientId) {
+        url += '&client=' + clientId;
       }
 
-      if (this.language) {
-        url += '&language=' + this.language;
+      if (language) {
+        url += '&language=' + language;
       }
 
-      if (this.signedIn) {
-        url += '&signed_in=' + this.signedIn;
+      if (signedIn) {
+        url += '&signed_in=' + signedIn;
       }
-      this.url = url;
-      this.load();
+      return url;
     },
 
     /**

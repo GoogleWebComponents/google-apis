@@ -11,12 +11,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="google-js-api.html">
 
 <!--
-Element for loading a specific Google API with the Javascript client library.
+Element for loading a specific client Google API with the Javascript client library.
+
+If you'd like to load anything hanging off `gapi.client`, this is your library.
 
 ##### Example
 
-    <google-api-loader id="shortener" name="urlshortener"
-                       version="v1"></google-api-loader>
+    <google-client-loader id="shortener" 
+      name="urlshortener"
+      version="v1"></google-client-loader>
 
     <script>
       var shortener = document.getElementById('shortener');
@@ -44,13 +47,13 @@ Element for loading a specific Google API with the Javascript client library.
     'use strict';
 
     // Stores whether the API client is done loading.
-    var clientLoaded_ = false;
+    var _clientLoaded = false;
 
     // Loaders and loading statuses for all APIs, indexed by API name.
     // This helps prevent multiple loading requests being fired at the same time
     // by multiple google-api-loader elements.
-    var statuses_ = {};
-    var loaders_ = {};
+    var _statuses = {};
+    var _loaders = {};
 
     Polymer({
 
@@ -109,7 +112,7 @@ Element for loading a specific Google API with the Javascript client library.
 
       // Used to fix events potentially being fired multiple times by
       // core-shared-lib.
-      waiting: false,
+      _waiting: false,
 
       /**
        * Used to override the event that is fired when the API lib is successfully loaded.
@@ -158,10 +161,10 @@ Element for loading a specific Google API with the Javascript client library.
 
       handleLoadResponse: function(response) {
         if (response && response.error) {
-          statuses_[this.name] = 'error';
+          _statuses[this.name] = 'error';
           this.fireError(response);
         } else {
-          statuses_[this.name] = 'loaded';
+          _statuses[this.name] = 'loaded';
           this.fireSuccess();
         }
       },
@@ -185,17 +188,17 @@ Element for loading a specific Google API with the Javascript client library.
       },
 
       doneLoadingClient: function() {
-        clientLoaded_ = true;
+        _clientLoaded = true;
         // Fix for API client load event being fired multiple times by
         // core-shared-lib.
-        if (!this.waiting) {
+        if (!this._waiting) {
           this.loadApi();
         }
       },
 
       createSelfRemovingListener: function(eventName) {
         var handler = function () {
-          loaders_[this.name].removeEventListener(eventName, handler);
+          _loaders[this.name].removeEventListener(eventName, handler);
           this.loadApi();
         }.bind(this);
 
@@ -203,20 +206,20 @@ Element for loading a specific Google API with the Javascript client library.
       },
 
       loadApi: function() {
-        if (clientLoaded_ && this.name && this.version) {
-          this.waiting = false;
+        if (_clientLoaded && this.name && this.version) {
+          this._waiting = false;
           // Is this API already loaded?
-          if (statuses_[this.name] == 'loaded') {
+          if (_statuses[this.name] == 'loaded') {
             this.fireSuccess();
           // Is a different google-api-loader already loading this API?
-          } else if (statuses_[this.name] == 'loading') {
-            this.waiting = true;
-            loaders_[this.name].addEventListener(this.successEventName,
+          } else if (_statuses[this.name] == 'loading') {
+            this._waiting = true;
+            _loaders[this.name].addEventListener(this.successEventName,
                 this.createSelfRemovingListener(this.successEventName));
-            loaders_[this.name].addEventListener(this.errorEventName,
+            _loaders[this.name].addEventListener(this.errorEventName,
                 this.createSelfRemovingListener(this.errorEventName));
           // Did we get an error when we tried to load this API before?
-          } else if (statuses_[this.name] == 'error') {
+          } else if (_statuses[this.name] == 'error') {
             this.fireError();
           // Otherwise, looks like we're loading a new API.
           } else {
@@ -226,8 +229,8 @@ Element for loading a specific Google API with the Javascript client library.
             } else if (this.appId) {
               root = 'https://' + this.appId + '.appspot.com/_ah/api';
             }
-            statuses_[this.name] = 'loading';
-            loaders_[this.name] = this;
+            _statuses[this.name] = 'loading';
+            _loaders[this.name] = this;
             gapi.client.load(this.name, this.version,
                 this.handleLoadResponse.bind(this), root);
           }

@@ -10,7 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="core-jsonp-library.html">
 <!--
-Dynamically loads the Google JavaScript API, firing the `api-load` event when ready.
+Dynamically loads Google JavaScript API (gapi), firing the `js-api-load` event when ready.
 
 Any number of components can use `<google-js-api>` elements, and the library will only be loaded once.
 
@@ -20,7 +20,7 @@ Any number of components can use `<google-js-api>` elements, and the library wil
     <script>
       var api = document.querySelector('google-js-api');
       api.addEventListener('js-api-load', function(e) {
-        console.log('API loaded');
+        console.log('API loaded', gapi);
       });
     </script>
 
@@ -31,7 +31,7 @@ Any number of components can use `<google-js-api>` elements, and the library wil
   Polymer({
     is: 'google-js-api',
 
-    mixins: [
+    behaviors: [
       Polymer.Core.JSONPLibrary
     ],
 
@@ -51,8 +51,8 @@ Any number of components can use `<google-js-api>` elements, and the library wil
       }
     },
 
-    ready: function() {
-      this.load();
+    get api() {
+      return gapi;
     }
   });
 </script>

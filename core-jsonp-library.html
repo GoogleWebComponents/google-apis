@@ -16,29 +16,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   Polymer.Core = Polymer.Core || {};
 
   /**
-    `Polymer.Core.JSONPLibrary` library mixin replaces core-shared-lib
+    `Polymer.Core.JSONPLibrary` library behavior 
 
-    Supports sharing a JSONP-based JavaScript library.
+    Supports loading a shared a JSONP-based JavaScript library.
   
-    Example:
+    Multiple components can request a library using a `JSONPLibrary` 
+    behavior and only one copy of that library will
+    load from network.
 
-    Polymer({
-      
-    });  
+    Some libraries require a specific global function be defined. 
+    If this is the case, specify the `callbackName` property.
 
-    <core-shared-lib on-core-shared-lib-load="{{load}}" url="https://apis.google.com/js/plusone.js?onload=%%callback%%">
+    You should use an HTML Import to load library dependencies
+    when possible instead of using this element.
 
-    Multiple components can request a library using a `JSONPLibrary` mixin and only one copy of that library will
-    loaded from the network.
-
-    Some libraries require a specific global function be defined. If this is the case, specify the `callbackName` property.
-
-    Where possible, you should use an HTML Import to load library dependencies. Rather than using this element,
-    create an import (`<link rel="import" href="lib.html">`) that wraps loading the .js file:
+    @element jsonp-library-loader
 
    */
   Polymer.Core.JSONPLibrary = {
-    // loads the library, and fires this.notifyEvent upon completion
+    /** loads the library, and fires this.notifyEvent upon completion */
     load: function() {
       if (!this.url && this.defaultUrl)
         this.url = this.defaultUrl;
@@ -49,6 +45,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }.bind(this),
         this.callbackName
       );
+    },
+    ready: function() {
+      this.load()
     }
   }
 

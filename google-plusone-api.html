@@ -23,7 +23,7 @@ Any number of components can use `<google-plusone-api>` elements, and the librar
 
     is: 'google-plusone-api',
 
-    mixins: [
+    behaviors: [
       Polymer.Core.JSONPLibrary
     ],
 
@@ -43,10 +43,6 @@ Any number of components can use `<google-plusone-api>` elements, and the librar
         value: 'api-load'
       },
 
-    },
-
-    ready: function() {
-      this.load();
     },
     
     get api() {

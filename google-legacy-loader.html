@@ -11,10 +11,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="core-jsonp-library.html">
 
 <!--
-Dynamically loads the legacy Google JavaScript API Loader (https://developers.google.com/loader/),
-firing the `api-load` event when ready.
+Dynamically loads the legacy Google JavaScript API Loader (https://developers.google.com/loader/).
 
-Any number of components can use `<google-legacy-loader>` elements, and the library will only be loaded once.
+Fires `api-load` event when ready.
 
 @element google-legacy-loader
 @homepage https://googlewebcomponents.github.io/google-apis
@@ -23,7 +22,7 @@ Any number of components can use `<google-legacy-loader>` elements, and the libr
   Polymer({
     is: 'google-legacy-loader',
 
-    mixins: [
+    behaviors: [
       Polymer.Core.JSONPLibrary
     ],
 
@@ -44,9 +43,6 @@ Any number of components can use `<google-legacy-loader>` elements, and the libr
   		
     },
 
-    ready: function() {
-      this.load();
-    },
     /**
      * Wrapper for `google` API namespace.
      * @property api

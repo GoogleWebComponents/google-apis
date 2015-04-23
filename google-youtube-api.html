@@ -26,7 +26,7 @@ https://developers.google.com/youtube/iframe_api_reference
 
     is: 'google-youtube-api',
 
-    mixins: [
+    behaviors: [
       Polymer.Core.JSONPLibrary
     ],
 
@@ -50,10 +50,6 @@ https://developers.google.com/youtube/iframe_api_reference
         type: String,
         value: 'onYouTubeIframeAPIReady'
       }
-    },
-
-    ready: function() {
-      this.load();
     },
 
     get api() {

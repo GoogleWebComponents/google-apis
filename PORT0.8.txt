@@ -12,7 +12,7 @@
 + google-calendar
 ✓ google-drive
 ✓ google-youtube-upload
-    google-hangout-button
+✓ google-hangout-button
     google-sheets
 
 other:
