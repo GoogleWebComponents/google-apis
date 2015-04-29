@@ -17,7 +17,7 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
 
 ##### Example
 
-    <google-client-loader id="shortener" 
+    <google-client-loader id="shortener"
       name="urlshortener"
       version="v1"></google-client-loader>
 
@@ -61,13 +61,13 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
 
       /**
        * Fired when the requested API is loaded. Override this name
-       * by setting `successEventName`. 
+       * by setting `successEventName`.
        * @event google-api-load
        */
 
       /**
        * Fired if an error occurs while loading the requested API. Override this name
-       * by setting `errorEventName`. 
+       * by setting `errorEventName`.
        * @event google-api-load-error
        */
 
@@ -121,7 +121,7 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
        * @default 'google-api-load'
        */
       successEventName: 'google-api-load',
-      
+
       /**
        * Used to override the event that is fired when there is an error loading the API.
        * @property errorEventName
@@ -239,4 +239,3 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
     });
   })();
 </script>
-</polymer-element>

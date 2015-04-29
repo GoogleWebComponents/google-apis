@@ -8,7 +8,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="core-jsonp-library.html">
+<link rel="import" href="../iron-jsonp-library/iron-jsonp-library.html">
 
 <!--
 Dynamically loads the Google Youtube Iframe API, firing the `api-load` event when ready.
@@ -27,12 +27,12 @@ https://developers.google.com/youtube/iframe_api_reference
     is: 'google-youtube-api',
 
     behaviors: [
-      Polymer.Core.JSONPLibrary
+      Polymer.IronJsonpLibraryBehavior
     ],
 
     properties: {
 
-      defaultUrl: {
+      libraryUrl:  {
         type: String,
         value: 'https://www.youtube.com/iframe_api'
       },
@@ -40,16 +40,17 @@ https://developers.google.com/youtube/iframe_api_reference
       /**
        * Fired when the API library is loaded and available.
        * @event api-load
-       */      
-      notifyEvent: {
+       */
+      notifyEvent:  {
         type: String,
         value: 'api-load'
       },
 
-      callbackName: {
+      callbackName:  {
         type: String,
         value: 'onYouTubeIframeAPIReady'
       }
+
     },
 
     get api() {

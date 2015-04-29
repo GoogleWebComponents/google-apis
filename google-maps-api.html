@@ -8,7 +8,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="core-jsonp-library.html">
+<link rel="import" href="../iron-jsonp-library/iron-jsonp-library.html">
 
 <!--
 Dynamically loads the Google Maps JavaScript API, firing the `api-load` event when ready.
@@ -42,12 +42,12 @@ Fired when the Maps API library is loaded and ready.
     is: 'google-maps-api',
 
     behaviors: [
-      Polymer.Core.JSONPLibrary
+      Polymer.IronJsonpLibraryBehavior
     ],
 
     properties: {
 
-      defaultUrl: {
+      mapsUrl: {
         type: String,
         value: 'https://maps.googleapis.com/maps/api/js?callback=%%callback%%'
       },
@@ -133,14 +133,14 @@ Fired when the Maps API library is loaded and ready.
         value: 'api-load'
       },
 
-      url: {
+      libraryUrl: {
         type: String,
-        computed: 'computeUrl(defaultUrl, version, libraries, apiKey, clientId, language, signedIn)'
+        computed: 'computeUrl(mapsUrl, version, libraries, apiKey, clientId, language, signedIn)'
       }
     },
 
-    computeUrl: function(defaultUrl, version, libraries, apiKey, clientId, language, signedIn) {
-      var url = defaultUrl + '&v=' + version;
+    computeUrl: function(mapsUrl, version, libraries, apiKey, clientId, language, signedIn) {
+      var url = mapsUrl + '&v=' + version;
       url += "&libraries=" + libraries;
 
       if (apiKey && !clientId) {

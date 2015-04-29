@@ -1,19 +1,20 @@
-✓ core-localstorage
-✓ google-youtube
-✓ google-streetview-pano
-✓ google-castable-video
-✓ google-apis
-+ google-map
-✓ google-chart
-✓ google-url-shortener
-✓ core-signals
-✓ google-signin
-✓ google-analytics
-+ google-calendar
-✓ google-drive
-✓ google-youtube-upload
-✓ google-hangout-button
-    google-sheets
+✓ iron-jsonp-library: done, ported from core-shared-library
+✓ core-localstorage: iron-localstorage awaiting approval
+✓ iron-signals: done, ported from core-signals
+✓ google-analytics: pull request, being reviewed
+✓ google-signin: merged
++ google-map: merged, new changes to atotic
+✓ google-youtube: pull request
+✓ google-streetview-pano: pull request
+✓ google-castable-video: pull request
+✓ google-apis: pull request
+✓ google-chart: pull request
+✓ google-url-shortener: pull request
++ google-calendar: pull request
+✓ google-drive: pull request
+✓ google-youtube-upload: pull request
+✓ google-hangout-button: pull request
+  google-sheets: eric will do it
 
 other:
 Google Elements port
@@ -43,8 +44,6 @@ works
 moved google-map-marker outside of google-map
 onMutation not supported. Use MutationObserver instead
 markers do not appear unless dom=shadow. Is it because <content select=google-map-marker>?
-google-map-directions
-  attribute startAddress can be string|google.maps.LatLng. Declaring it as Object makes attribute parse fail. SHould it be declared as string?
 tests:
   marker removal tests fails, because getDistributedNodes() returns obsolete list. Should updateMarkers do querySelector() instead?
 
@@ -69,12 +68,12 @@ signal already means something different on Unix. broadcaster, multiplexer?
 
 1.10) google-signin
 google-signin-aware broadcasts core-signal with google-auth-request to update scopes. Why do it through events, and not
-as a binding on google-signin? 
+as a binding on google-signin?
 Removed unnecessary globals: auth, flowControl
 Also, why are we not using gapi.signin2.render? It creates just the right button, easily wrapped. Instead, we are creating ours from scratch.
 
 1.11) google-analytics
-use same promise polyfill as rest 
+use same promise polyfill as rest
 google-analytics-base functionality removed, no inheritance, google-analytics-setup instead
 google-analytics-chart: used to inherit from query, had to replicate attributes
 google-analytics-dashboard: not needed, use autobind instead
@@ -83,7 +82,7 @@ google-analytics-dashboard: not needed, use autobind instead
 Sign out, then in, does not display calendars again because Invalid Auth. Calendar API problem, present in original demo.
 Did not port tests, complex.
 
-1.13) google-drive 
+1.13) google-drive
 works
 
 1.14) google-youtube-upload
@@ -109,7 +108,7 @@ No sub-property event handlers ($.player.playVideo)
 Can't declare elements in top-level document is annoying in demos
 <body fullbleed unresolved> fullbleed unresolved attribute missing in 0.8
  <script> Polymer = { dom: 'shadow' }; </script> does not work ?dom=shadow works
- How do we declare multi-type attributes? 
+ How do we declare multi-type attributes?
 How to call super on upgraded video element?
 General architecture: google-apis, why use elements instead of js libraries? Elements should be used when:
 - there is a UI

@@ -8,7 +8,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="core-jsonp-library.html">
+<link rel="import" href="../iron-jsonp-library/iron-jsonp-library.html">
 
 <!--
 Dynamically loads the legacy Google JavaScript API Loader (https://developers.google.com/loader/).
@@ -23,15 +23,16 @@ Fires `api-load` event when ready.
     is: 'google-legacy-loader',
 
     behaviors: [
-      Polymer.Core.JSONPLibrary
+      Polymer.IronJsonpLibraryBehavior
     ],
 
     properties: {
-      defaultUrl: {
+
+      libraryUrl: {
         type: String,
         value: 'https://www.google.com/jsapi?callback=%%callback%%'
       },
-		
+
 	   	/**
   		 * Fired when the API library is loaded and available.
   		 * @event api-load
@@ -39,8 +40,7 @@ Fires `api-load` event when ready.
       notifyEvent: {
         type: String,
         value: 'api-load'
-      },
-  		
+      }
     },
 
     /**
@@ -52,4 +52,3 @@ Fires `api-load` event when ready.
     }
   });
 </script>
-</polymer-element>
