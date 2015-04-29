@@ -11,20 +11,17 @@ subject to an additional IP rights grant found at https://polymer.github.io/PATE
 <link rel="import" href="../iron-jsonp-library/iron-jsonp-library.html">
 
 <!--
-Dynamically loads the Google Youtube Iframe API, firing the `api-load` event when ready.
+Dynamically loads the legacy Google JavaScript API Loader (https://developers.google.com/loader/).
 
-Any number of components can use `<google-youtube-api>` elements, and the library will only be loaded once.
+Fires `api-load` event when ready.
 
-https://developers.google.com/youtube/iframe_api_reference
-
-@element google-youtube-api
+@element google-legacy-loader
 @homepage https://googlewebcomponents.github.io/google-apis
 -->
 <script>
-
   Polymer({
 
-    is: 'google-youtube-api',
+    is: 'google-legacy-loader',
 
     behaviors: [
       Polymer.IronJsonpLibraryBehavior
@@ -32,30 +29,27 @@ https://developers.google.com/youtube/iframe_api_reference
 
     properties: {
 
-      libraryUrl:  {
+      libraryUrl: {
         type: String,
-        value: 'https://www.youtube.com/iframe_api'
+        value: 'https://www.google.com/jsapi?callback=%%callback%%'
       },
 
-      /**
-       * Fired when the API library is loaded and available.
-       * @event api-load
-       */
-      notifyEvent:  {
+	   	/**
+  		 * Fired when the API library is loaded and available.
+  		 * @event api-load
+  		 */
+      notifyEvent: {
         type: String,
         value: 'api-load'
-      },
-
-      callbackName:  {
-        type: String,
-        value: 'onYouTubeIframeAPIReady'
       }
-
     },
 
+    /**
+     * Wrapper for `google` API namespace.
+     * @property api
+     */
     get api() {
-      return YT;
+      return google;
     }
-
   });
 </script>
