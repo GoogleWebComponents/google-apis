@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="google-js-api.html">
 
 <!--
-Element for loading a specific client Google API with the Javascript client library.
+Element for loading a specific client Google API with the JavaScript client library.
 
 If you'd like to load anything hanging off `gapi.client`, this is your library.
 
@@ -36,7 +36,7 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
 @element google-api-loader
 @homepage https://googlewebcomponents.github.io/google-apis
 -->
-<dom-module id='google-client-loader'>
+<dom-module id="google-client-loader">
   <template>
     <google-js-api on-js-api-load="loadClient"></google-js-api>
   </template>
@@ -111,7 +111,7 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
       },
 
       // Used to fix events potentially being fired multiple times by
-      // core-shared-lib.
+      // iron-jsonp-library.
       _waiting: false,
 
       /**
@@ -154,9 +154,7 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
       },
 
       loadClient: function() {
-        gapi.load("client", function() {
-          this.doneLoadingClient();
-        }.bind(this));
+        gapi.load('client', this.doneLoadingClient.bind(this));
       },
 
       handleLoadResponse: function(response) {
@@ -190,7 +188,7 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
       doneLoadingClient: function() {
         _clientLoaded = true;
         // Fix for API client load event being fired multiple times by
-        // core-shared-lib.
+        // iron-jsonp-library.
         if (!this._waiting) {
           this.loadApi();
         }

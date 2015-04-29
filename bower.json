@@ -29,6 +29,6 @@
     "iron-jsonp-library": "PolymerElements/iron-jsonp-library#^0.8.0",
   },
   "devDependencies": {
-    "iron-doc-viewer": "PolymerElements/iron-doc-viewer#^0.8.6"
+    "iron-doc-viewer": "PolymerElements/iron-doc-viewer#^0.8.8"
   }
 }

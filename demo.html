@@ -12,15 +12,15 @@
 
   <template  id="t" is="x-autobind">
 
-    <google-client-loader id="shortener" 
+    <google-client-loader id="shortener"
       name="urlshortener"
       version="v1"
       on-google-api-load="loadedShortener"></google-client-loader>
-    <google-js-api        on-js-api-load="loaded"></google-js-api>
-    <google-plusone-api   on-api-load="loaded"></google-plusone-api>
-    <google-realtime-api  on-api-load="loaded"></google-realtime-api>
-    <google-maps-api      on-api-load="loaded"></google-maps-api>
-    <google-youtube-api   on-api-load="loaded"></google-youtube-api>
+    <google-js-api on-js-api-load="loaded"></google-js-api>
+    <google-plusone-api on-api-load="loaded"></google-plusone-api>
+    <google-realtime-api on-api-load="loaded"></google-realtime-api>
+    <google-maps-api on-api-load="loaded"></google-maps-api>
+    <google-youtube-api on-api-load="loaded"></google-youtube-api>
     <google-legacy-loader on-api-load="loaded"></google-legacy-loader>
 
   </template>
@@ -38,7 +38,7 @@
     };
 
     t.loaded = function(e) {
-      document.querySelector('#messages').innerHTML += 
+      document.querySelector('#messages').innerHTML +=
         e.target.localName + ' loaded' + '<br>';
       console.log(e.target.localName + ' loaded', event.target.api);
     };

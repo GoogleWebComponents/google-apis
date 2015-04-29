@@ -2,7 +2,7 @@
 ✓ core-localstorage: iron-localstorage awaiting approval
 ✓ iron-signals: done, ported from core-signals
 ✓ google-analytics: pull request, being reviewed
-✓ google-signin: merged
+✓ google-signin: merged. upgraded to iron,
 + google-map: merged, new changes to atotic
 ✓ google-youtube: pull request
 ✓ google-streetview-pano: pull request
@@ -22,8 +22,7 @@ Google Elements port
 properties: left nulls as undefined, instead of declaring value
 
 1) google-apis https://github.com/atotic/google-apis
-core-shared-lib is no longer there. No more custom element inheritance, need a mixin
-Name it: Polymer.Core.JSONPLibrary
+core-shared-lib is no longer there. No more custom element inheritance, need a behavior. Created iron-jsonp-library
 Because mixin:
 - make Loader take callback, not object.method
 renamed google-jsapi to google-legacy-loader (otherwise we end up with google-js-api and google-jsapi)
@@ -43,9 +42,6 @@ works
 1.4) google-maps https://github.com/atotic/google-map
 moved google-map-marker outside of google-map
 onMutation not supported. Use MutationObserver instead
-markers do not appear unless dom=shadow. Is it because <content select=google-map-marker>?
-tests:
-  marker removal tests fails, because getDistributedNodes() returns obsolete list. Should updateMarkers do querySelector() instead?
 
 1.5) google-streetview-pano https://github.com/atotic/google-streetview-pano
 changed panoid to panoId for sanity's sake
