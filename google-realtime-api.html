@@ -8,7 +8,7 @@ subject to an additional IP rights grant found at https://polymer.github.io/PATE
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../core-shared-lib/core-shared-lib.html">
+<link rel="import" href="../iron-jsonp-library/iron-jsonp-library.html">
 
 <!--
 Dynamically loads the Google Drive Realtime API, firing the `api-load` event when ready.
@@ -16,27 +16,38 @@ Dynamically loads the Google Drive Realtime API, firing the `api-load` event whe
 Any number of components can use `<google-realtime-api>` elements, and the library will only be loaded once.
 
 @element google-realtime-api
-@extends core-shared-lib
 @homepage https://googlewebcomponents.github.io/google-apis
 -->
-<polymer-element name="google-realtime-api" extends="core-shared-lib">
 <script>
   Polymer({
-    defaultUrl: 'https://apis.google.com/js/drive-realtime.js?onload=%%callback%%',
-    /**
-     * Fired when the API library is loaded and available.
-     * @event api-load
-     */
-    notifyEvent: 'api-load',
 
-    /**
-     * Wrapper for `gapi.drive.realtime` API object.
-     * @property api
-     * @type gapi.drive.realtime
-     */
+    is: 'google-realtime-api',
+
+    behaviors: [
+      Polymer.IronJsonpLibraryBehavior
+    ],
+
+    properties: {
+
+      libraryUrl:  {
+        type: String,
+        value: 'https://apis.google.com/js/drive-realtime.js?onload=%%callback%%'
+      },
+
+      /**
+       * Fired when the API library is loaded and available.
+       * @event api-load
+       */
+      notifyEvent:  {
+        type: String,
+        value: 'api-load'
+      }
+
+    },
+
     get api() {
       return gapi.drive.realtime;
     }
+
   });
 </script>
-</polymer-element>

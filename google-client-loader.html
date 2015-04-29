@@ -11,72 +11,15 @@ subject to an additional IP rights grant found at https://polymer.github.io/PATE
 <link rel="import" href="google-js-api.html">
 
 <!--
-Dynamically loads the Google Client JavaScript API, firing the `api-load` event when ready.
+Element for loading a specific client Google API with the JavaScript client library.
 
-Any number of components can use `<google-client-api>` elements, and the library will only be loaded once.
-
-##### Example
-
-    <google-client-api></google-client-api>
-    <script>
-      var client = document.querySelector('google-client-api');
-      client.addEventListener('api-load', function(e) {
-        // this.api === gapi.client
-        // this.auth === gapi.auth
-      });
-    </script>
-
-@element google-client-api
-@homepage https://googlewebcomponents.github.io/google-apis
--->
-<polymer-element name="google-client-api">
-  <template>
-    <google-js-api on-js-api-load="{{loadClient}}"></google-js-api>
-  </template>
-<script>
-  Polymer({
-    /**
-     * Loads the client library when the api js has loaded.
-     */
-    loadClient: function() {
-      gapi.load("client", function() {
-        this.fire(this.notifyEvent, arguments);
-      }.bind(this));
-    },
-
-    /**
-     * Fired when the API library is loaded and available.
-     * @event api-load
-     */
-    notifyEvent: 'api-load',
-
-    /**
-     * Wrapper for `gapi.client`.
-     * @property api
-     * @type gapi.client
-     */
-    get api() {
-      return gapi.client;
-    },
-    /**
-     * Wrapper for `gapi.auth`.
-     * @property auth
-     * @type gapi.auth
-     */
-    get auth() {
-      return gapi.auth;
-    }
-  });
-</script>
-</polymer-element>
-
-<!--
-Element for loading a specific Google API with the Javascript client library.
+If you'd like to load anything hanging off `gapi.client`, this is your library.
 
 ##### Example
 
-    <google-api-loader id="shortener" name="urlshortener"
-                       version="v1"></google-api-loader>
+    <google-client-loader id="shortener"
+      name="urlshortener"
+      version="v1"></google-client-loader>
 
     <script>
       var shortener = document.getElementById('shortener');
@@ -91,27 +34,31 @@ Element for loading a specific Google API with the Javascript client library.
     </script>
 
 @element google-api-loader
-@extends google-client-api
 @homepage https://googlewebcomponents.github.io/google-apis
 -->
-<polymer-element name="google-api-loader"
-                 attributes="name version appId root"
-                 extends="google-client-api"
-                 on-api-load="{{doneLoadingClient}}">
+<dom-module id="google-client-loader">
+  <template>
+    <google-js-api on-js-api-load="loadClient"></google-js-api>
+  </template>
+</dom-module>
+
 <script>
   (function() {
     'use strict';
 
     // Stores whether the API client is done loading.
-    var clientLoaded_ = false;
+    var _clientLoaded = false;
 
     // Loaders and loading statuses for all APIs, indexed by API name.
     // This helps prevent multiple loading requests being fired at the same time
     // by multiple google-api-loader elements.
-    var statuses_ = {};
-    var loaders_ = {};
+    var _statuses = {};
+    var _loaders = {};
 
-    Polymer('google-api-loader', {
+    Polymer({
+
+      is: 'google-client-loader',
+
       /**
        * Fired when the requested API is loaded. Override this name
        * by setting `successEventName`.
@@ -124,46 +71,48 @@ Element for loading a specific Google API with the Javascript client library.
        * @event google-api-load-error
        */
 
-      /**
-       * Name of the API to load, e.g. 'urlshortener'.
-       *
-       * You can find the full list of APIs on the
-       * <a href="https://developers.google.com/apis-explorer"> Google APIs
-       * Explorer</a>.
-       * @attribute name
-       * @type string
-       * @required
-       */
-      name: '',
+      properties: {
+        /**
+         * Name of the API to load, e.g. 'urlshortener'.
+         *
+         * You can find the full list of APIs on the
+         * <a href="https://developers.google.com/apis-explorer"> Google APIs
+         * Explorer</a>.
+         * @attribute name
+         * @type string
+         * @required
+         */
+        name: String,
 
-      /**
-       * Version of the API to load, e.g. 'v1'.
-       * @attribute version
-       * @type string
-       * @required
-       */
-      version: '',
+        /**
+         * Version of the API to load, e.g. 'v1'.
+         * @attribute version
+         * @type string
+         * @required
+         */
+        version: String,
 
-      /**
-       * App Engine application ID for loading a Google Cloud Endpoints API.
-       * @attribute appId
-       * @type string
-       */
-      appId: null,
+        /**
+         * App Engine application ID for loading a Google Cloud Endpoints API.
+         * @attribute appId
+         * @type string
+         */
+        appId: String,
 
-      /**
-       * Root URL where to load the API from, e.g. 'http://host/apis'.
-       * For App Engine dev server this would be something like:
-       * 'http://localhost:8080/_ah/api'.
-       * Overrides 'appId' if both are specified.
-       * @attribute root
-       * @type string
-       */
-      root: null,
+        /**
+         * Root URL where to load the API from, e.g. 'http://host/apis'.
+         * For App Engine dev server this would be something like:
+         * 'http://localhost:8080/_ah/api'.
+         * Overrides 'appId' if both are specified.
+         * @attribute root
+         * @type string
+         */
+        root: String,
+      },
 
       // Used to fix events potentially being fired multiple times by
-      // core-shared-lib.
-      waiting: false,
+      // iron-jsonp-library.
+      _waiting: false,
 
       /**
        * Used to override the event that is fired when the API lib is successfully loaded.
@@ -195,12 +144,25 @@ Element for loading a specific Google API with the Javascript client library.
         }
       },
 
+      /**
+       * Wrapper for `gapi.auth`.
+       * @property auth
+       * @type gapi.auth
+       */
+      get auth() {
+        return gapi.auth;
+      },
+
+      loadClient: function() {
+        gapi.load('client', this.doneLoadingClient.bind(this));
+      },
+
       handleLoadResponse: function(response) {
         if (response && response.error) {
-          statuses_[this.name] = 'error';
+          _statuses[this.name] = 'error';
           this.fireError(response);
         } else {
-          statuses_[this.name] = 'loaded';
+          _statuses[this.name] = 'loaded';
           this.fireSuccess();
         }
       },
@@ -224,17 +186,17 @@ Element for loading a specific Google API with the Javascript client library.
       },
 
       doneLoadingClient: function() {
-        clientLoaded_ = true;
+        _clientLoaded = true;
         // Fix for API client load event being fired multiple times by
-        // core-shared-lib.
-        if (!this.waiting) {
+        // iron-jsonp-library.
+        if (!this._waiting) {
           this.loadApi();
         }
       },
 
       createSelfRemovingListener: function(eventName) {
         var handler = function () {
-          loaders_[this.name].removeEventListener(eventName, handler);
+          _loaders[this.name].removeEventListener(eventName, handler);
           this.loadApi();
         }.bind(this);
 
@@ -242,20 +204,20 @@ Element for loading a specific Google API with the Javascript client library.
       },
 
       loadApi: function() {
-        if (clientLoaded_ && this.name && this.version) {
-          this.waiting = false;
+        if (_clientLoaded && this.name && this.version) {
+          this._waiting = false;
           // Is this API already loaded?
-          if (statuses_[this.name] == 'loaded') {
+          if (_statuses[this.name] == 'loaded') {
             this.fireSuccess();
           // Is a different google-api-loader already loading this API?
-          } else if (statuses_[this.name] == 'loading') {
-            this.waiting = true;
-            loaders_[this.name].addEventListener(this.successEventName,
+          } else if (_statuses[this.name] == 'loading') {
+            this._waiting = true;
+            _loaders[this.name].addEventListener(this.successEventName,
                 this.createSelfRemovingListener(this.successEventName));
-            loaders_[this.name].addEventListener(this.errorEventName,
+            _loaders[this.name].addEventListener(this.errorEventName,
                 this.createSelfRemovingListener(this.errorEventName));
           // Did we get an error when we tried to load this API before?
-          } else if (statuses_[this.name] == 'error') {
+          } else if (_statuses[this.name] == 'error') {
             this.fireError();
           // Otherwise, looks like we're loading a new API.
           } else {
@@ -265,8 +227,8 @@ Element for loading a specific Google API with the Javascript client library.
             } else if (this.appId) {
               root = 'https://' + this.appId + '.appspot.com/_ah/api';
             }
-            statuses_[this.name] = 'loading';
-            loaders_[this.name] = this;
+            _statuses[this.name] = 'loading';
+            _loaders[this.name] = this;
             gapi.client.load(this.name, this.version,
                 this.handleLoadResponse.bind(this), root);
           }
@@ -275,4 +237,3 @@ Element for loading a specific Google API with the Javascript client library.
     });
   })();
 </script>
-</polymer-element>

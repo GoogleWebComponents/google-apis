@@ -1,0 +1,111 @@
+✓ iron-jsonp-library: done, ported from core-shared-library
+✓ core-localstorage: iron-localstorage awaiting approval
+✓ iron-signals: done, ported from core-signals
+✓ google-analytics: pull request, being reviewed
+✓ google-signin: merged. upgraded to iron,
++ google-map: merged, new changes to atotic
+✓ google-youtube: pull request
+✓ google-streetview-pano: pull request
+✓ google-castable-video: pull request
+✓ google-apis: pull request
+✓ google-chart: pull request
+✓ google-url-shortener: pull request
++ google-calendar: pull request
+✓ google-drive: pull request
+✓ google-youtube-upload: pull request
+✓ google-hangout-button: pull request
+  google-sheets: eric will do it
+
+other:
+Google Elements port
+
+properties: left nulls as undefined, instead of declaring value
+
+1) google-apis https://github.com/atotic/google-apis
+core-shared-lib is no longer there. No more custom element inheritance, need a behavior. Created iron-jsonp-library
+Because mixin:
+- make Loader take callback, not object.method
+renamed google-jsapi to google-legacy-loader (otherwise we end up with google-js-api and google-jsapi)
+Buffalo buffalo Buffalo buffalo buffalo buffalo Buffalo buffalo
+renamed google-api-loader to google-client-loader for readability
+
+1.1) google-youtube https://github.com/atotic/google-youtube
+_determinePlaySupported adds video to body, not shadowDom for feature detection
+needs my core-localstorage port
+
+1.2) google-signin
+would love to eliminate google-signal
+
+1.3) google-youtube-upload
+works
+
+1.4) google-maps https://github.com/atotic/google-map
+moved google-map-marker outside of google-map
+onMutation not supported. Use MutationObserver instead
+
+1.5) google-streetview-pano https://github.com/atotic/google-streetview-pano
+changed panoid to panoId for sanity's sake
+
+1.6) google-chart https://github.com/atotic/google-chart
+works
+
+1.7) google-castable-video https://github.com/atotic/google-castable-video
+super() call does not exist in 0.8. Is:
+Object.getPrototypeOf(Object.getPrototypeOf(this)).pause.call(this); acceptable?
+
+1.8) google-url-shortener https://github.com/atotic/google-url-shortener
+- added new properties: shortUrl, error
+- reworked demo, so it does not need custom elements (x-autobind instead)
+did not test successfully because I do not have correct API key
+
+1.9) core-signals
+google-signin dependency. If no one else is using it, I'd move it into google-signin, or google-apis.
+signal already means something different on Unix. broadcaster, multiplexer?
+
+1.10) google-signin
+google-signin-aware broadcasts core-signal with google-auth-request to update scopes. Why do it through events, and not
+as a binding on google-signin?
+Removed unnecessary globals: auth, flowControl
+Also, why are we not using gapi.signin2.render? It creates just the right button, easily wrapped. Instead, we are creating ours from scratch.
+
+1.11) google-analytics
+use same promise polyfill as rest
+google-analytics-base functionality removed, no inheritance, google-analytics-setup instead
+google-analytics-chart: used to inherit from query, had to replicate attributes
+google-analytics-dashboard: not needed, use autobind instead
+
+1.12) google-calendar
+Sign out, then in, does not display calendars again because Invalid Auth. Calendar API problem, present in original demo.
+Did not port tests, complex.
+
+1.13) google-drive
+works
+
+1.14) google-youtube-upload
+works
+
+1.15) google-hangout-button
+works
+
+0.8 bummers:
+passing constants to computed functions would be useful for (if this, if this, if this) scenario. Instead of X compute funciton, one function with varied constant argument.
+
+core-localstorage: need to commit
+Annotated computed properties bug: computeCalStyle(item.backgroundColor) works, computeCalStyle( item.backgroundColor) does not (cant have space after start bracket, or before closing bracket).
+Can be fixed in effects.html, _parseMethod, _parseArg
+autobind: properties, want callbacks on property changes
+namespaces: flat namespace considered harmful! Mixing and matching components gets tricky quicky
+observers: if value is not assigned to property, observers do not fire. This is a bug
+Pattern for communicating shared state between elements of same type: decided on:
+- simple list of listeners. Caller just assigns to listeners. Listener list has disconnect method.
+body unresolved? not thereQ
+Annotated computed properties do not display error if property is undefined. Bit me in google-signin
+No sub-property event handlers ($.player.playVideo)
+Can't declare elements in top-level document is annoying in demos
+<body fullbleed unresolved> fullbleed unresolved attribute missing in 0.8
+ <script> Polymer = { dom: 'shadow' }; </script> does not work ?dom=shadow works
+ How do we declare multi-type attributes?
+How to call super on upgraded video element?
+General architecture: google-apis, why use elements instead of js libraries? Elements should be used when:
+- there is a UI
+- to expose bindings

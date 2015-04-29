@@ -8,7 +8,7 @@ subject to an additional IP rights grant found at https://polymer.github.io/PATE
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../core-shared-lib/core-shared-lib.html">
+<link rel="import" href="../iron-jsonp-library/iron-jsonp-library.html">
 
 <!--
 Dynamically loads the Google+ JavaScript API, firing the `api-load` event when ready.
@@ -16,27 +16,38 @@ Dynamically loads the Google+ JavaScript API, firing the `api-load` event when r
 Any number of components can use `<google-plusone-api>` elements, and the library will only be loaded once.
 
 @element google-plusone-api
-@extends core-shared-lib
 @homepage https://googlewebcomponents.github.io/google-apis
 -->
-<polymer-element name="google-plusone-api" extends="core-shared-lib">
 <script>
   Polymer({
-    defaultUrl: 'https://apis.google.com/js/plusone.js?onload=%%callback%%',
-    /**
-     * Fired when the API library is loaded and available.
-     * @event api-load
-     */
-    notifyEvent: 'api-load',
 
-    /**
-     * Wrapper for `gapi`.
-     * @property api
-     * @type gapi
-     */
+    is: 'google-plusone-api',
+
+    behaviors: [
+      Polymer.IronJsonpLibraryBehavior
+    ],
+
+    properties: {
+
+      libraryUrl:  {
+        type: String,
+        value: 'https://apis.google.com/js/plusone.js?onload=%%callback%%'
+      },
+
+      /**
+       * Fired when the API library is loaded and available.
+       * @event api-load
+       */
+      notifyEvent:  {
+        type: String,
+        value: 'api-load'
+      }
+
+    },
+
     get api() {
       return gapi;
     }
+
   });
 </script>
-</polymer-element>
