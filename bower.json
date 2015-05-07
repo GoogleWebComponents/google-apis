@@ -26,6 +26,6 @@
     "iron-jsonp-library": "PolymerElements/iron-jsonp-library#^0.8.1"
   },
   "devDependencies": {
-    "iron-component-page": "PolymerElements/iron-component-page#^0.8.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^0.8.1"
   }
 }
