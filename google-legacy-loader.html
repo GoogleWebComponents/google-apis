@@ -10,15 +10,12 @@ subject to an additional IP rights grant found at https://polymer.github.io/PATE
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-jsonp-library/iron-jsonp-library.html">
 
-<!--
+<script>
+/**
 Dynamically loads the legacy Google JavaScript API Loader (https://developers.google.com/loader/).
 
 Fires `api-load` event when ready.
-
-@element google-legacy-loader
-@homepage https://googlewebcomponents.github.io/google-apis
--->
-<script>
+*/
   Polymer({
 
     is: 'google-legacy-loader',
@@ -29,15 +26,19 @@ Fires `api-load` event when ready.
 
     properties: {
 
+      /** @private */
       libraryUrl: {
         type: String,
         value: 'https://www.google.com/jsapi?callback=%%callback%%'
       },
 
-	   	/**
-  		 * Fired when the API library is loaded and available.
-  		 * @event api-load
-  		 */
+      /**
+       * Fired when the API library is loaded and available.
+       * @event js-api-load
+       */
+      /**
+       * Name of event fired when library is loaded and available.
+       */
       notifyEvent: {
         type: String,
         value: 'api-load'
@@ -46,7 +47,6 @@ Fires `api-load` event when ready.
 
     /**
      * Wrapper for `google` API namespace.
-     * @property api
      */
     get api() {
       return google;
