@@ -1,34 +1,31 @@
 {
-    "name": "google-apis",
-    "version": "0.4.4",
-    "description": "Web components to load Google API libraries",
-    "homepage": "https://googlewebcomponents.github.io/google-apis",
-    "main": "google-apis.html",
-    "authors": [
-        "Scott Miles <sjmiles@google.com>",
-        "Eric Bidelman <ebidel@gmail.com>"
-    ],
-    "license": "Apache2",
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "test",
-        "tests",
-        "../"
-    ],
-    "keywords": [
-        "web-component",
-        "web-components",
-        "polymer",
-        "google",
-        "apis"
-    ],
-    "dependencies": {
-        "polymer": "Polymer/polymer#v0.8.0-rc.7",
-        "iron-jsonp-library": "PolymerElements/iron-jsonp-library#^0.8.1"
-    },
-    "devDependencies": {
-        "iron-doc-viewer": "PolymerElements/iron-doc-viewer#^0.8.8"
-    }
+  "name": "google-apis",
+  "version": "0.4.4",
+  "description": "Web components to load Google API libraries",
+  "homepage": "https://googlewebcomponents.github.io/google-apis",
+  "main": "google-apis.html",
+  "authors": [
+    "Scott Miles <sjmiles@google.com>",
+    "Eric Bidelman <ebidel@gmail.com>"
+  ],
+  "license": "Apache2",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "/demo/"
+  ],
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "google",
+    "apis"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#v0.8.0-rc.7",
+    "iron-jsonp-library": "PolymerElements/iron-jsonp-library#^0.8.1"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^0.8.0",
+  }
 }

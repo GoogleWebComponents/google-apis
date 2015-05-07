@@ -13,7 +13,7 @@ subject to an additional IP rights grant found at https://polymer.github.io/PATE
 <!--
 Element for loading a specific client Google API with the JavaScript client library.
 
-If you'd like to load anything hanging off `gapi.client`, this is your library.
+For loading `gapi.client` libraries
 
 ##### Example
 
@@ -33,12 +33,10 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
       });
     </script>
 
-@element google-api-loader
-@homepage https://googlewebcomponents.github.io/google-apis
 -->
 <dom-module id="google-client-loader">
   <template>
-    <google-js-api on-js-api-load="loadClient"></google-js-api>
+    <google-js-api on-js-api-load="_loadClient"></google-js-api>
   </template>
 </dom-module>
 
@@ -78,24 +76,18 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
          * You can find the full list of APIs on the
          * <a href="https://developers.google.com/apis-explorer"> Google APIs
          * Explorer</a>.
-         * @attribute name
-         * @type string
          * @required
          */
         name: String,
 
         /**
          * Version of the API to load, e.g. 'v1'.
-         * @attribute version
-         * @type string
          * @required
          */
         version: String,
 
         /**
          * App Engine application ID for loading a Google Cloud Endpoints API.
-         * @attribute appId
-         * @type string
          */
         appId: String,
 
@@ -104,10 +96,24 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
          * For App Engine dev server this would be something like:
          * 'http://localhost:8080/_ah/api'.
          * Overrides 'appId' if both are specified.
-         * @attribute root
-         * @type string
          */
         root: String,
+
+        /**
+         * Name of the event fired when API library is loaded.
+         */
+        successEventName: {
+          type: String,
+          value: 'google-api-load'
+        },
+
+        /**
+         * Name of the event fired when there is an error loading the library.
+         */
+        errorEventName: {
+          type: String,
+          value: 'google-api-load-error'
+        }
       },
 
       // Used to fix events potentially being fired multiple times by
@@ -115,24 +121,7 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
       _waiting: false,
 
       /**
-       * Used to override the event that is fired when the API lib is successfully loaded.
-       * @property successEventName
-       * @type string
-       * @default 'google-api-load'
-       */
-      successEventName: 'google-api-load',
-
-      /**
-       * Used to override the event that is fired when there is an error loading the API.
-       * @property errorEventName
-       * @type string
-       * @default 'google-api-load-error'
-       */
-      errorEventName: 'google-api-load-error',
-
-      /**
        * Returns the loaded API.
-       * @property api
        * @type gapi.client
        */
       get api() {
@@ -146,33 +135,31 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
 
       /**
        * Wrapper for `gapi.auth`.
-       * @property auth
-       * @type gapi.auth
        */
       get auth() {
         return gapi.auth;
       },
 
-      loadClient: function() {
-        gapi.load('client', this.doneLoadingClient.bind(this));
+      _loadClient: function() {
+        gapi.load('client', this._doneLoadingClient.bind(this));
       },
 
-      handleLoadResponse: function(response) {
+      _handleLoadResponse: function(response) {
         if (response && response.error) {
           _statuses[this.name] = 'error';
-          this.fireError(response);
+          this._fireError(response);
         } else {
           _statuses[this.name] = 'loaded';
-          this.fireSuccess();
+          this._fireSuccess();
         }
       },
 
-      fireSuccess: function() {
+      _fireSuccess: function() {
         this.fire(this.successEventName,
             { 'name': this.name, 'version': this.version });
       },
 
-      fireError: function(response) {
+      _fireError: function(response) {
         if (response && response.error) {
           this.fire(this.errorEventName, {
             'name': this.name,
@@ -185,40 +172,40 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
         }
       },
 
-      doneLoadingClient: function() {
+      _doneLoadingClient: function() {
         _clientLoaded = true;
         // Fix for API client load event being fired multiple times by
         // iron-jsonp-library.
         if (!this._waiting) {
-          this.loadApi();
+          this._loadApi();
         }
       },
 
-      createSelfRemovingListener: function(eventName) {
+      _createSelfRemovingListener: function(eventName) {
         var handler = function () {
           _loaders[this.name].removeEventListener(eventName, handler);
-          this.loadApi();
+          this._loadApi();
         }.bind(this);
 
         return handler;
       },
 
-      loadApi: function() {
+      _loadApi: function() {
         if (_clientLoaded && this.name && this.version) {
           this._waiting = false;
           // Is this API already loaded?
           if (_statuses[this.name] == 'loaded') {
-            this.fireSuccess();
+            this._fireSuccess();
           // Is a different google-api-loader already loading this API?
           } else if (_statuses[this.name] == 'loading') {
             this._waiting = true;
             _loaders[this.name].addEventListener(this.successEventName,
-                this.createSelfRemovingListener(this.successEventName));
+                this._createSelfRemovingListener(this.successEventName));
             _loaders[this.name].addEventListener(this.errorEventName,
-                this.createSelfRemovingListener(this.errorEventName));
+                this._createSelfRemovingListener(this.errorEventName));
           // Did we get an error when we tried to load this API before?
           } else if (_statuses[this.name] == 'error') {
-            this.fireError();
+            this._fireError();
           // Otherwise, looks like we're loading a new API.
           } else {
             var root;
@@ -230,7 +217,7 @@ If you'd like to load anything hanging off `gapi.client`, this is your library.
             _statuses[this.name] = 'loading';
             _loaders[this.name] = this;
             gapi.client.load(this.name, this.version,
-                this.handleLoadResponse.bind(this), root);
+                this._handleLoadResponse.bind(this), root);
           }
         }
       }

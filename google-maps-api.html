@@ -11,6 +11,15 @@ subject to an additional IP rights grant found at https://polymer.github.io/PATE
 <link rel="import" href="../iron-jsonp-library/iron-jsonp-library.html">
 
 <!--
+-->
+<!--
+Fired when the Maps API library is loaded and ready.
+
+@event api-load
+-->
+
+<script>
+/**
 Dynamically loads the Google Maps JavaScript API, firing the `api-load` event when ready.
 
 #### Example
@@ -21,22 +30,13 @@ Dynamically loads the Google Maps JavaScript API, firing the `api-load` event wh
       mapsAPI.addEventListener('api-load', function(e) {
         // this.api === google.maps
       });
-    </script>
+    <script>
 
 Any number of components can use `<google-maps-api>` elements, and the library will only be loaded once.
 
-@element google-maps-api
 @blurb Element wrapper around Google Maps API.
-@homepage https://googlewebcomponents.github.io/google-apis
--->
-<!--
-Fired when the Maps API library is loaded and ready.
 
-@event api-load
--->
-
-<script>
-
+ */
   Polymer({
 
     is: 'google-maps-api',
@@ -47,6 +47,7 @@ Fired when the Maps API library is loaded and ready.
 
     properties: {
 
+      /** @private */
       mapsUrl: {
         type: String,
         value: 'https://maps.googleapis.com/maps/api/js?callback=%%callback%%'
@@ -54,9 +55,6 @@ Fired when the Maps API library is loaded and ready.
 
       /**
        * A Maps API key. To obtain an API key, see developers.google.com/maps/documentation/javascript/tutorial#api_key.
-       *
-       * @attribute apiKey
-       * @type string
        */
       apiKey: {
         type: String,
@@ -66,9 +64,6 @@ Fired when the Maps API library is loaded and ready.
       /**
        * A Maps API for Business Client ID. To obtain a Maps API for Business Client ID, see developers.google.com/maps/documentation/business/.
        * If set, a Client ID will take precedence over an API Key.
-       *
-       * @attribute clientId
-       * @type string
        */
       clientId: {
         type: String,
@@ -78,10 +73,6 @@ Fired when the Maps API library is loaded and ready.
       /**
        * The libraries to load with this map. Defaults to "places". For more information
        * see https://developers.google.com/maps/documentation/javascript/libraries.
-       *
-       * @attribute libraries
-       * @type string
-       * @default "places"
        */
       libraries: {
         type: String,
@@ -90,10 +81,6 @@ Fired when the Maps API library is loaded and ready.
 
       /**
        * Version of the Maps API to use.
-       *
-       * @attribute version
-       * @type string
-       * @default '3.exp'
        */
       version: {
         type: String,
@@ -106,10 +93,6 @@ Fired when the Maps API library is loaded and ready.
        *
        * Note: the Maps API defaults to the preffered language setting of the browser.
        * Use this parameter to override that behavior.
-       *
-       * @attribute language
-       * @type string
-       * @default null
        */
       language: {
         type: String,
@@ -118,28 +101,32 @@ Fired when the Maps API library is loaded and ready.
       /**
        * If true, sign-in is enabled.
        * See https://developers.google.com/maps/documentation/javascript/signedin#enable_sign_in
-       *
-       * @attribute signedIn
-       * @type boolean
-       * @default false
        */
       signedIn: {
         type: Boolean,
         value: false
       },
 
+       /**
+       * Fired when the API library is loaded and available.
+       * @event js-api-load
+       */
+      /**
+       * Name of event fired when library is loaded and available.
+       */
       notifyEvent: {
         type: String,
         value: 'api-load'
       },
 
+      /** @private */
       libraryUrl: {
         type: String,
-        computed: 'computeUrl(mapsUrl, version, libraries, apiKey, clientId, language, signedIn)'
+        computed: '_computeUrl(mapsUrl, version, libraries, apiKey, clientId, language, signedIn)'
       }
     },
 
-    computeUrl: function(mapsUrl, version, libraries, apiKey, clientId, language, signedIn) {
+    _computeUrl: function(mapsUrl, version, libraries, apiKey, clientId, language, signedIn) {
       var url = mapsUrl + '&v=' + version;
       url += "&libraries=" + libraries;
 
@@ -163,9 +150,6 @@ Fired when the Maps API library is loaded and ready.
 
     /**
      * Provides the google.maps JS API namespace.
-     *
-     * @property api
-     * @type google.maps
      */
     get api() {
       return google.maps;

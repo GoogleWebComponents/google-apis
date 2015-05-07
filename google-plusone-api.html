@@ -10,15 +10,12 @@ subject to an additional IP rights grant found at https://polymer.github.io/PATE
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-jsonp-library/iron-jsonp-library.html">
 
-<!--
+<script>
+/**
 Dynamically loads the Google+ JavaScript API, firing the `api-load` event when ready.
 
 Any number of components can use `<google-plusone-api>` elements, and the library will only be loaded once.
-
-@element google-plusone-api
-@homepage https://googlewebcomponents.github.io/google-apis
--->
-<script>
+*/
   Polymer({
 
     is: 'google-plusone-api',
@@ -29,6 +26,7 @@ Any number of components can use `<google-plusone-api>` elements, and the librar
 
     properties: {
 
+      /** @private */
       libraryUrl:  {
         type: String,
         value: 'https://apis.google.com/js/plusone.js?onload=%%callback%%'
@@ -36,7 +34,10 @@ Any number of components can use `<google-plusone-api>` elements, and the librar
 
       /**
        * Fired when the API library is loaded and available.
-       * @event api-load
+       * @event js-api-load
+       */
+      /**
+       * Name of event fired when library is loaded and available.
        */
       notifyEvent:  {
         type: String,
