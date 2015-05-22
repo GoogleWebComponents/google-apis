@@ -1,6 +1,6 @@
 {
   "name": "google-apis",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "Web components to load Google API libraries",
   "homepage": "https://googlewebcomponents.github.io/google-apis",
   "main": "google-apis.html",
@@ -22,10 +22,10 @@
     "apis"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#v0.9.0-rc.1",
-    "iron-jsonp-library": "PolymerElements/iron-jsonp-library#^0.9.0"
+    "polymer": "Polymer/polymer#^0.9.0",
+    "iron-jsonp-library": "PolymerElements/iron-jsonp-library#^0.9.1"
   },
   "devDependencies": {
-    "iron-component-page": "PolymerElements/iron-component-page#^0.9.1"
+    "iron-component-page": "PolymerElements/iron-component-page#^0.9.4"
   }
 }
