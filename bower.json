@@ -22,10 +22,10 @@
     "apis"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^0.9.0",
-    "iron-jsonp-library": "PolymerElements/iron-jsonp-library#^0.9.1"
+    "polymer": "Polymer/polymer#^1.0.0",
+    "iron-jsonp-library": "PolymerElements/iron-jsonp-library#^1.0.0"
   },
   "devDependencies": {
-    "iron-component-page": "PolymerElements/iron-component-page#^0.9.4"
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0"
   }
 }
