@@ -97,7 +97,7 @@ For loading `gapi.client` libraries
          * 'http://localhost:8080/_ah/api'.
          * Overrides 'appId' if both are specified.
          */
-        root: String,
+        apiRoot: String,
 
         /**
          * Name of the event fired when API library is loaded.
@@ -209,8 +209,8 @@ For loading `gapi.client` libraries
           // Otherwise, looks like we're loading a new API.
           } else {
             var root;
-            if (this.root) {
-              root = this.root
+            if (this.apiRoot) {
+              root = this.apiRoot;
             } else if (this.appId) {
               root = 'https://' + this.appId + '.appspot.com/_ah/api';
             }
