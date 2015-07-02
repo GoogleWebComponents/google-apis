@@ -1,6 +1,6 @@
 {
   "name": "google-apis",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "homepage": "http://googlewebcomponents.github.io/google-apis",
   "description": "Web components to load Google API libraries",
   "main": "google-apis.html",
@@ -25,6 +25,6 @@
     "apis"
   ],
   "dependencies": {
-    "core-shared-lib": "Polymer/core-shared-lib#~0.5.1"
+    "core-shared-lib": "Polymer/core-shared-lib#^0.5.5"
   }
 }

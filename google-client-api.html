@@ -8,7 +8,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../core-shared-lib/core-shared-lib.html">
+<link rel="import" href="google-js-api.html">
 
 <!--
 Dynamically loads the Google Client JavaScript API, firing the `api-load` event when ready.
@@ -27,7 +27,6 @@ Any number of components can use `<google-client-api>` elements, and the library
     </script>
 
 @element google-client-api
-@extends core-shared-lib
 @homepage https://googlewebcomponents.github.io/google-apis
 -->
 <!--
@@ -46,8 +45,11 @@ Fired when an OAuth response token includes an error.
   @param {boolean} detail.immediate If true, the token was requested without a UI.
   @param {Object} detail.token The OAuth response token (see https://developers.google.com/api-client-library/javascript/reference/referencedocs#OAuth20TokenObject).
 -->
-<polymer-element name="google-client-api" extends="core-shared-lib"
+<polymer-element name="google-client-api"
                  attributes="apiKey clientId scopes cors">
+  <template>
+    <google-js-api on-js-api-load="{{loadClient}}"></google-js-api>
+  </template>
 <script>
   (function() {
     // Stores whether an authorization attempt is in progress.
@@ -64,14 +66,6 @@ Fired when an OAuth response token includes an error.
     };
 
     Polymer({
-      defaultUrl: 'https://apis.google.com/js/client.js?onload=%%callback%%',
-
-      /**
-       * Fired when the API library is loaded and available.
-       * @event api-load
-       */
-      notifyEvent: 'api-load',
-
       /**
        * API key obtained from the Google Developers Console
        * (https://console.developers.google.com).
@@ -112,27 +106,38 @@ Fired when an OAuth response token includes an error.
        */
       cors: false,
 
-      created: function() {
-        // Configure client as soon as it's loaded.
-        this.addEventListener(this.notifyEvent, function() {
+      /**
+       * Loads the client library when the api js has loaded.
+       */
+      loadClient: function() {
+        gapi.load("client", function() {
+          // Configure client as soon as it's loaded.
           if (this.apiKey) {
             gapi.client.setApiKey(this.apiKey);
           }
           if (this.clientId) {
-            // Attempt "immediate" OAuth check (use existing refresh token to get an access token).
+            // Attempt "immediate" OAuth check (use existing refresh token to get access token).
             this.authorize(true);
           }
           if (this.useCors) {
             gapi.config.update('client/cors', true);
           }
-        }.bind(this));
 
-        // Watch for changes to authorization state (which could be made by another instance).
-        Object.observe(authState_, function(changes) {
-          this.fire(authState_.authorized ? 'client-authorized' : 'client-authorization-error',
-              authState_);
+          // Watch for changes to authorization state (which could be made by another instance).
+          Object.observe(authState_, function(changes) {
+            this.fire(authState_.authorized ? 'client-authorized' : 'client-authorization-error',
+                authState_);
+          }.bind(this));
+
+          this.fire(this.notifyEvent, arguments);
         }.bind(this));
       },
+
+      /**
+       * Fired when the API library is loaded and available.
+       * @event api-load
+       */
+      notifyEvent: 'api-load',
 
       /**
        * Initiates OAuth authorization.
@@ -358,11 +363,10 @@ Element for loading a specific Google API with the Javascript client library.
       },
 
       createSelfRemovingListener: function(eventName) {
-        var self = this;
         var handler = function () {
-          loaders_[self.name].removeEventListener(eventName, handler);
-          self.loadApi();
-        };
+          loaders_[this.name].removeEventListener(eventName, handler);
+          this.loadApi();
+        }.bind(this);
 
         return handler;
       },
