@@ -12,14 +12,13 @@ subject to an additional IP rights grant found at https://polymer.github.io/PATE
 
 <script>
 /**
-Dynamically loads the Google Drive Realtime API, firing the `api-load` event when ready.
+Dynamically loads the legacy Google JavaScript API Loader (https://developers.google.com/loader/).
 
-Any number of components can use `<google-realtime-api>` elements, and the library will only be loaded once.
-
+Fires `api-load` event when ready.
 */
   Polymer({
 
-    is: 'google-realtime-api',
+    is: 'google-legacy-loader',
 
     behaviors: [
       Polymer.IronJsonpLibraryBehavior
@@ -28,31 +27,29 @@ Any number of components can use `<google-realtime-api>` elements, and the libra
     properties: {
 
       /** @private */
-      libraryUrl:  {
+      libraryUrl: {
         type: String,
-        value: 'https://apis.google.com/js/drive-realtime.js?onload=%%callback%%'
+        value: 'https://www.google.com/jsapi?callback=%%callback%%'
       },
 
-       /**
+      /**
        * Fired when the API library is loaded and available.
-       * @event api-load
+       * @event js-api-load
        */
       /**
        * Name of event fired when library is loaded and available.
        */
-      notifyEvent:  {
+      notifyEvent: {
         type: String,
         value: 'api-load'
       }
-
     },
 
     /**
-     * Returns `gapi.drive.realtime`
+     * Wrapper for `google` API namespace.
      */
     get api() {
-      return gapi.drive.realtime;
+      return google;
     }
-
   });
 </script>
