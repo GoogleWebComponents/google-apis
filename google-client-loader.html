@@ -213,7 +213,7 @@ For loading `gapi.client` libraries
             if (this.apiRoot) {
               root = this.apiRoot;
             } else if (this.appId) {
-              root = 'https://' + this.appId + '.appspot.com/_ah/api';
+              root = '//' + this.appId + '.appspot.com/_ah/api';
             }
             _statuses[this.name] = 'loading';
             _loaders[this.name] = this;
