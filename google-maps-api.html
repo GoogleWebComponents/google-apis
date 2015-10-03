@@ -63,15 +63,6 @@ Any number of components can use `<google-maps-api>` elements, and the library w
       },
 
       /**
-       * The libraries to load with this map. For more information
-       * see https://developers.google.com/maps/documentation/javascript/libraries.
-       */
-      libraries: {
-        type: String,
-        value: ''
-      },
-
-      /**
        * Version of the Maps API to use.
        */
       version: {
@@ -114,16 +105,15 @@ Any number of components can use `<google-maps-api>` elements, and the library w
       /** @private */
       libraryUrl: {
         type: String,
-        computed: '_computeUrl(mapsUrl, version, libraries, apiKey, clientId, language, signedIn)'
+        computed: '_computeUrl(mapsUrl, version, apiKey, clientId, language, signedIn)'
       }
     },
 
-    _computeUrl: function(mapsUrl, version, libraries, apiKey, clientId, language, signedIn) {
+    _computeUrl: function(mapsUrl, version, apiKey, clientId, language, signedIn) {
       var url = mapsUrl + '&v=' + version;
 
-      if (libraries) {
-        url += "&libraries=" + libraries;
-      }
+      // Always load all Maps API libraries.
+      url += '&libraries=drawing,geometry,places,visualization';
 
       if (apiKey && !clientId) {
         url += '&key=' + apiKey;
