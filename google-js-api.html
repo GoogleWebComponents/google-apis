@@ -10,8 +10,7 @@ subject to an additional IP rights grant found at https://polymer.github.io/PATE
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-jsonp-library/iron-jsonp-library.html">
 
-<script>
-/**
+<!--
 Dynamically loads Google JavaScript API `gapi`, firing the `js-api-load` event when ready.
 
 Any number of components can use `<google-js-api>` elements, and the library will only be loaded once.
@@ -24,9 +23,9 @@ Any number of components can use `<google-js-api>` elements, and the library wil
       api.addEventListener('js-api-load', function(e) {
         console.log('API loaded', gapi);
       });
-    < /script>
-
-*/
+    </script>
+-->
+<script>
   Polymer({
 
     is: 'google-js-api',
