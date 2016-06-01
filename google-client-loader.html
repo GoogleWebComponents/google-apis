@@ -112,12 +112,25 @@ For loading `gapi.client` libraries
         errorEventName: {
           type: String,
           value: 'google-api-load-error'
+        },
+
+        _clientLoaded: {
+          type: Boolean,
+          value: false
+        },
+
+        // Used to fix events potentially being fired multiple times by
+        // iron-jsonp-library.
+        _waiting: {
+          type: Boolean,
+          value: false
         }
+
       },
 
-      // Used to fix events potentially being fired multiple times by
-      // iron-jsonp-library.
-      _waiting: false,
+      observers: [
+        '_tryLoadingApi(_waiting, _clientLoaded, name, version)'
+      ],
 
       /**
        * Returns the loaded API.
@@ -172,6 +185,7 @@ For loading `gapi.client` libraries
 
       _doneLoadingClient: function() {
         _clientLoaded = true;
+        this._clientLoaded = true;
         // Fix for API client load event being fired multiple times by
         // iron-jsonp-library.
         if (!this._waiting) {
@@ -186,6 +200,11 @@ For loading `gapi.client` libraries
         }.bind(this);
 
         return handler;
+      },
+
+      _tryLoadingApi: function(waiting, clientLoaded, name, version) {
+        if (!waiting && clientLoaded && name && version)
+          this._loadApi();
       },
 
       _loadApi: function() {
