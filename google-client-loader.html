@@ -114,16 +114,18 @@ For loading `gapi.client` libraries
           value: 'google-api-load-error'
         },
 
-        _clientLoaded: {
+        clientLoaded: {
           type: Boolean,
-          value: false
+          value: false,
+          readOnly: true
         },
 
         // Used to fix events potentially being fired multiple times by
         // iron-jsonp-library.
-        _waiting: {
+        waiting: {
           type: Boolean,
-          value: false
+          value: false,
+          readOnly: true
         }
 
       },
@@ -185,7 +187,7 @@ For loading `gapi.client` libraries
 
       _doneLoadingClient: function() {
         _clientLoaded = true;
-        this._clientLoaded = true;
+        this._setClientLoaded(true);
         // Fix for API client load event being fired multiple times by
         // iron-jsonp-library.
         if (!this._waiting) {
@@ -203,19 +205,20 @@ For loading `gapi.client` libraries
       },
 
       _tryLoadingApi: function(waiting, clientLoaded, name, version) {
-        if (!waiting && clientLoaded && name && version)
+        if (!waiting && clientLoaded && name && version) {
           this._loadApi();
+        }
       },
 
       _loadApi: function() {
         if (_clientLoaded && this.name && this.version) {
-          this._waiting = false;
+          this._setWaiting(false);
           // Is this API already loaded?
           if (_statuses[this.name] == 'loaded') {
             this._fireSuccess();
           // Is a different google-api-loader already loading this API?
           } else if (_statuses[this.name] == 'loading') {
-            this._waiting = true;
+            this._setWaiting(true);
             _loaders[this.name].addEventListener(this.successEventName,
                 this._createSelfRemovingListener(this.successEventName));
             _loaders[this.name].addEventListener(this.errorEventName,
