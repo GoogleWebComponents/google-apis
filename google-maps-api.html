@@ -103,9 +103,18 @@ Any number of components can use `<google-maps-api>` elements, and the library w
 
       /** @private */
       libraryUrl: {
-        type: String,
-        computed: '_computeUrl(mapsUrl, version, apiKey, clientId, language, signedIn)'
+        type: String
       }
+    },
+
+    observers: [
+      '_debounceComputeUrl(mapsUrl, version, apiKey, clientId, language, signedIn)'
+    ],
+
+    _debounceComputeUrl: function(mapsUrl, version, apiKey, clientId, language, signedIn) {
+      this.debounce('_computeUrl', function () {
+        this.libraryUrl = this._computeUrl(mapsUrl, version, apiKey, clientId, language, signedIn);
+      }, 0);
     },
 
     _computeUrl: function(mapsUrl, version, apiKey, clientId, language, signedIn) {
