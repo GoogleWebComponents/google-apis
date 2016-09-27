@@ -141,7 +141,7 @@ For loading `gapi.client` libraries
         this._loader = document.createElement('google-js-api');
         this.listen(this._loader, 'js-api-load', '_loadClient');
         if (this._loader.libraryLoaded) {
-            this._loader.fire('js-api-load',{});
+            this._loader.fire('js-api-load');
         }
       },
 
