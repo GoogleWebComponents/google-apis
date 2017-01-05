@@ -10,38 +10,43 @@
 <body>
   <div id="messages"></div>
 
-  <template  id="t" is="dom-bind">
+  <dom-module id="demo-element">
+    <template>
 
-    <google-client-loader id="shortener"
-      name="urlshortener"
-      version="v1"
-      on-google-api-load="loadedShortener"></google-client-loader>
-    <google-js-api on-js-api-load="loaded"></google-js-api>
-    <google-plusone-api on-api-load="loaded"></google-plusone-api>
-    <google-realtime-api on-api-load="loaded"></google-realtime-api>
-    <google-maps-api on-api-load="loaded"></google-maps-api>
-    <google-youtube-api on-api-load="loaded"></google-youtube-api>
-    <google-legacy-loader on-api-load="loaded"></google-legacy-loader>
+      <google-client-loader id="shortener"
+        name="urlshortener"
+        version="v1"
+        on-google-api-load="loadedShortener"></google-client-loader>
+      <google-js-api on-js-api-load="loaded"></google-js-api>
+      <google-plusone-api on-api-load="loaded"></google-plusone-api>
+      <google-realtime-api on-api-load="loaded"></google-realtime-api>
+      <google-maps-api on-api-load="loaded"></google-maps-api>
+      <google-youtube-api on-api-load="loaded"></google-youtube-api>
+      <google-legacy-loader on-api-load="loaded"></google-legacy-loader>
 
-  </template>
+    </template>
+    <script>
+      Polymer({
+        is: 'demo-element',
 
-  <script>
-    var t = document.querySelector('#t');
+        loadedShortener: function(event) {
+          var request = event.target.api.url.get({
+            shortUrl: 'http://goo.gl/fbsS'
+          })
+          request.execute(function(resp) {
+            console.log(resp);
+          });
+        },
 
-    t.loadedShortener = function(event) {
-      var request = event.target.api.url.get({
-        shortUrl: 'http://goo.gl/fbsS'
+        loaded: function(e) {
+          document.querySelector('#messages').innerHTML +=
+            e.target.localName + ' loaded' + '<br>';
+          console.log(e.target.localName + ' loaded', event.target.api);
+        }
       })
-      request.execute(function(resp) {
-        console.log(resp);
-      });
-    };
+    </script>
+  </dom-module>
 
-    t.loaded = function(e) {
-      document.querySelector('#messages').innerHTML +=
-        e.target.localName + ' loaded' + '<br>';
-      console.log(e.target.localName + ' loaded', event.target.api);
-    };
-  </script>
+  <demo-element></demo-element>
 </body>
 </html>
