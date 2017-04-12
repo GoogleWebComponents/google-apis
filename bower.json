@@ -21,7 +21,7 @@
     "apis"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#2.0-preview",
+    "polymer": "Polymer/polymer#^2.0.0-rc.1",
     "iron-jsonp-library": "PolymerElements/iron-jsonp-library#2.0-preview"
   },
   "devDependencies": {
