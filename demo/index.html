@@ -10,8 +10,8 @@
 <body>
   <div id="messages"></div>
 
-  <dom-module id="demo-element">
-    <template>
+  <dom-bind id="bind">
+    <template id="t" is="dom-bind">
 
       <google-client-loader id="shortener"
         name="urlshortener"
@@ -25,28 +25,27 @@
       <google-legacy-loader on-api-load="loaded"></google-legacy-loader>
 
     </template>
-    <script>
-      Polymer({
-        is: 'demo-element',
-
-        loadedShortener: function(event) {
-          var request = event.target.api.url.get({
-            shortUrl: 'http://goo.gl/fbsS'
-          })
-          request.execute(function(resp) {
-            console.log(resp);
-          });
-        },
-
-        loaded: function(e) {
-          document.querySelector('#messages').innerHTML +=
-            e.target.localName + ' loaded' + '<br>';
-          console.log(e.target.localName + ' loaded', event.target.api);
-        }
+  </dom-bind>
+  <script>
+    // polymer 1.x compatibility
+    t.loadedShortener = function(event) {
+      var request = event.target.api.url.get({
+        shortUrl: 'http://goo.gl/fbsS'
       })
-    </script>
-  </dom-module>
+      request.execute(function(resp) {
+        console.log(resp);
+      });
+    }
 
-  <demo-element></demo-element>
+    t.loaded = function(e) {
+      document.querySelector('#messages').innerHTML +=
+        e.target.localName + ' loaded' + '<br>';
+      console.log(e.target.localName + ' loaded', event.target.api);
+    }
+
+    // Polymer 2.0 compatibility
+    bind.loadedShortener = t.loadedShortener;
+    bind.loaded = t.loaded;
+  </script>
 </body>
 </html>
