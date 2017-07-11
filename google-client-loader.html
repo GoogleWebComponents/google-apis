@@ -162,8 +162,7 @@ For loading `gapi.client` libraries
 
       _fireSuccess: function() {
         this.fire(this.successEventName,
-            { 'name': this.name, 'version': this.version },
-            { composed: true });
+            { 'name': this.name, 'version': this.version });
       },
 
       _fireError: function(response) {
@@ -171,13 +170,11 @@ For loading `gapi.client` libraries
           this.fire(this.errorEventName, {
             'name': this.name,
             'version': this.version,
-            'error': response.error },
-            { composed: true });
+            'error': response.error });
         } else {
           this.fire(this.errorEventName, {
             'name': this.name,
-            'version': this.version },
-            { composed: true });
+            'version': this.version });
         }
       },
 
