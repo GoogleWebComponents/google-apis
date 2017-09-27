@@ -140,7 +140,7 @@ For loading `gapi.client` libraries
       ready: function() {
         this._loader = document.createElement('google-js-api');
           
-        if (!this.shadowRoot) { this.createShadowRoot(); }
+        if (!this.shadowRoot) { this.attachShadow(); }
         this.shadowRoot.appendChild(this._loader);
           
         this.listen(this._loader, 'js-api-load', '_loadClient');
