@@ -1,3 +1,4 @@
+import { Polymer } from '../polymer/lib/legacy/polymer-fn.js';
 /*
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at https://polymer.github.io/LICENSE.txt
@@ -16,7 +17,7 @@ Polymer({
   is: 'google-legacy-loader',
 
   behaviors: [
-    Polymer.IronJsonpLibraryBehavior
+    Polymer.IronJsonpLibraryBehavior,
   ],
 
   properties: {
@@ -24,7 +25,7 @@ Polymer({
     /** @private */
     libraryUrl: {
       type: String,
-      value: 'https://www.google.com/jsapi?callback=%%callback%%'
+      value: 'https://www.google.com/jsapi?callback=%%callback%%',
     },
 
     /**
@@ -36,8 +37,8 @@ Polymer({
      */
     notifyEvent: {
       type: String,
-      value: 'api-load'
-    }
+      value: 'api-load',
+    },
   },
 
   /**
@@ -45,5 +46,5 @@ Polymer({
    */
   get api() {
     return google;
-  }
+  },
 });

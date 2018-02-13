@@ -1,13 +1,14 @@
+import { Polymer } from '../polymer/lib/legacy/polymer-fn.js';
 import './google-js-api.js';
 
 // Stores whether the API client is done loading.
-var _clientLoaded = false;
+let _clientLoaded = false;
 
 // Loaders and loading statuses for all APIs, indexed by API name.
 // This helps prevent multiple loading requests being fired at the same time
 // by multiple google-api-loader elements.
-var _statuses = {};
-var _loaders = {};
+const _statuses = {};
+const _loaders = {};
 
 Polymer({
 
@@ -58,7 +59,7 @@ Polymer({
      */
     successEventName: {
       type: String,
-      value: 'google-api-load'
+      value: 'google-api-load',
     },
 
     /**
@@ -66,12 +67,12 @@ Polymer({
      */
     errorEventName: {
       type: String,
-      value: 'google-api-load-error'
-    }
+      value: 'google-api-load-error',
+    },
   },
 
   hostAttributes: {
-    hidden: true // remove from rendering tree.
+    hidden: true, // remove from rendering tree.
   },
 
   // Used to fix events potentially being fired multiple times by
@@ -85,9 +86,8 @@ Polymer({
     if (window.gapi && window.gapi.client &&
         window.gapi.client[this.name]) {
       return window.gapi.client[this.name];
-    } else {
-      return undefined;
     }
+    return undefined;
   },
 
   /**
@@ -97,24 +97,24 @@ Polymer({
     return gapi.auth;
   },
 
-  ready: function() {
+  ready() {
     this._loader = document.createElement('google-js-api');
-      
-    if (!this.shadowRoot) { this.attachShadow({mode: 'open'}); }
+
+    if (!this.shadowRoot) { this.attachShadow({ mode: 'open' }); }
     this.shadowRoot.appendChild(this._loader);
-      
+
     this.listen(this._loader, 'js-api-load', '_loadClient');
   },
 
-  detached: function() {
+  detached() {
     this.unlisten(this._loader, 'js-api-load', '_loadClient');
   },
 
-  _loadClient: function() {
+  _loadClient() {
     gapi.load('client', this._doneLoadingClient.bind(this));
   },
 
-  _handleLoadResponse: function(response) {
+  _handleLoadResponse(response) {
     if (response && response.error) {
       _statuses[this.name] = 'error';
       this._fireError(response);
@@ -124,25 +124,29 @@ Polymer({
     }
   },
 
-  _fireSuccess: function() {
-    this.fire(this.successEventName,
-        { 'name': this.name, 'version': this.version });
+  _fireSuccess() {
+    this.fire(
+      this.successEventName,
+      { name: this.name, version: this.version },
+    );
   },
 
-  _fireError: function(response) {
+  _fireError(response) {
     if (response && response.error) {
       this.fire(this.errorEventName, {
-        'name': this.name,
-        'version': this.version,
-        'error': response.error });
+        name: this.name,
+        version: this.version,
+        error: response.error,
+      });
     } else {
       this.fire(this.errorEventName, {
-        'name': this.name,
-        'version': this.version });
+        name: this.name,
+        version: this.version,
+      });
     }
   },
 
-  _doneLoadingClient: function() {
+  _doneLoadingClient() {
     _clientLoaded = true;
     // Fix for API client load event being fired multiple times by
     // iron-jsonp-library.
@@ -151,7 +155,7 @@ Polymer({
     }
   },
 
-  _createSelfRemovingListener: function(eventName) {
+  _createSelfRemovingListener(eventName) {
     var handler = function () {
       _loaders[this.name].removeEventListener(eventName, handler);
       this._loadApi();
@@ -160,7 +164,7 @@ Polymer({
     return handler;
   },
 
-  _loadApi: function() {
+  _loadApi() {
     if (_clientLoaded && this.name && this.version) {
       this._waiting = false;
       // Is this API already loaded?
@@ -169,26 +173,32 @@ Polymer({
       // Is a different google-api-loader already loading this API?
       } else if (_statuses[this.name] == 'loading') {
         this._waiting = true;
-        _loaders[this.name].addEventListener(this.successEventName,
-            this._createSelfRemovingListener(this.successEventName));
-        _loaders[this.name].addEventListener(this.errorEventName,
-            this._createSelfRemovingListener(this.errorEventName));
+        _loaders[this.name].addEventListener(
+          this.successEventName,
+          this._createSelfRemovingListener(this.successEventName),
+        );
+        _loaders[this.name].addEventListener(
+          this.errorEventName,
+          this._createSelfRemovingListener(this.errorEventName),
+        );
       // Did we get an error when we tried to load this API before?
       } else if (_statuses[this.name] == 'error') {
         this._fireError(null);
       // Otherwise, looks like we're loading a new API.
       } else {
-        var root;
+        let root;
         if (this.apiRoot) {
           root = this.apiRoot;
         } else if (this.appId) {
-          root = 'https://' + this.appId + '.appspot.com/_ah/api';
+          root = `https://${this.appId}.appspot.com/_ah/api`;
         }
         _statuses[this.name] = 'loading';
         _loaders[this.name] = this;
-        gapi.client.load(this.name, this.version,
-            this._handleLoadResponse.bind(this), root);
+        gapi.client.load(
+          this.name, this.version,
+          this._handleLoadResponse.bind(this), root,
+        );
       }
     }
-  }
+  },
 });

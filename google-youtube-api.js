@@ -1,3 +1,4 @@
+import { Polymer } from '../polymer/lib/legacy/polymer-fn.js';
 /*
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at https://polymer.github.io/LICENSE.txt
@@ -18,15 +19,15 @@ Polymer({
   is: 'google-youtube-api',
 
   behaviors: [
-    Polymer.IronJsonpLibraryBehavior
+    Polymer.IronJsonpLibraryBehavior,
   ],
 
   properties: {
 
     /** @private */
-    libraryUrl:  {
+    libraryUrl: {
       type: String,
-      value: 'https://www.youtube.com/iframe_api'
+      value: 'https://www.youtube.com/iframe_api',
     },
 
     /**
@@ -36,20 +37,20 @@ Polymer({
     /**
      * Name of event fired when library loads.
      */
-    notifyEvent:  {
+    notifyEvent: {
       type: String,
-      value: 'api-load'
+      value: 'api-load',
     },
 
-    callbackName:  {
+    callbackName: {
       type: String,
-      value: 'onYouTubeIframeAPIReady'
-    }
+      value: 'onYouTubeIframeAPIReady',
+    },
 
   },
 
   get api() {
     return YT;
-  }
+  },
 
 });

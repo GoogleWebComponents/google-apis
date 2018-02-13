@@ -1,3 +1,4 @@
+import { Polymer } from '../polymer/lib/legacy/polymer-fn.js';
 /*
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at https://polymer.github.io/LICENSE.txt
@@ -16,28 +17,28 @@ Polymer({
   is: 'google-realtime-api',
 
   behaviors: [
-    Polymer.IronJsonpLibraryBehavior
+    Polymer.IronJsonpLibraryBehavior,
   ],
 
   properties: {
 
     /** @private */
-    libraryUrl:  {
+    libraryUrl: {
       type: String,
-      value: 'https://apis.google.com/js/drive-realtime.js?onload=%%callback%%'
+      value: 'https://apis.google.com/js/drive-realtime.js?onload=%%callback%%',
     },
 
-     /**
+    /**
      * Fired when the API library is loaded and available.
      * @event api-load
      */
     /**
      * Name of event fired when library is loaded and available.
      */
-    notifyEvent:  {
+    notifyEvent: {
       type: String,
-      value: 'api-load'
-    }
+      value: 'api-load',
+    },
 
   },
 
@@ -46,6 +47,6 @@ Polymer({
    */
   get api() {
     return gapi.drive.realtime;
-  }
+  },
 
 });
