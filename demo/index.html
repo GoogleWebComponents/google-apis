@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>google-apis Demo</title>
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../google-apis.html">
+  <script type="module" src="../google-apis.js"></script>
 </head>
 <body>
   <div id="messages"></div>
@@ -26,26 +26,27 @@
 
     </template>
   </dom-bind>
-  <script>
-    // polymer 1.x compatibility
-    t.loadedShortener = function(event) {
-      var request = event.target.api.url.get({
-        shortUrl: 'http://goo.gl/fbsS'
-      })
-      request.execute(function(resp) {
-        console.log(resp);
-      });
-    }
+  <script type="module">
+import '../google-apis.js';
+// polymer 1.x compatibility
+t.loadedShortener = function(event) {
+  var request = event.target.api.url.get({
+    shortUrl: 'http://goo.gl/fbsS'
+  })
+  request.execute(function(resp) {
+    console.log(resp);
+  });
+}
 
-    t.loaded = function(e) {
-      document.querySelector('#messages').innerHTML +=
-        e.target.localName + ' loaded' + '<br>';
-      console.log(e.target.localName + ' loaded', event.target.api);
-    }
+t.loaded = function(e) {
+  document.querySelector('#messages').innerHTML +=
+    e.target.localName + ' loaded' + '<br>';
+  console.log(e.target.localName + ' loaded', event.target.api);
+}
 
-    // Polymer 2.0 compatibility
-    bind.loadedShortener = t.loadedShortener;
-    bind.loaded = t.loaded;
-  </script>
+// Polymer 2.0 compatibility
+bind.loadedShortener = t.loadedShortener;
+bind.loaded = t.loaded;
+</script>
 </body>
 </html>
