@@ -1,7 +1,7 @@
 {
   "name": "@atomikolex/google-apis",
   "flat": true,
-  "version": "3.0.0",
+  "version": "3.0-preview",
   "description": "Web components to load Google API libraries",
   "contributors": [
     "Scott Miles <sjmiles@google.com>",
