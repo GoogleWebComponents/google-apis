@@ -6,6 +6,7 @@ import './google-realtime-api.js';
 import './google-youtube-api.js';
 
 /*
+@license
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at https://polymer.github.io/LICENSE.txt
 The complete set of authors may be found at https://polymer.github.io/AUTHORS.txt
