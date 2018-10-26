@@ -7,6 +7,11 @@ The complete set of contributors may be found at https://polymer.github.io/CONTR
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at https://polymer.github.io/PATENTS.txt
 */
+import '@polymer/polymer/polymer-legacy.js';
+
+import { IronJsonpLibraryBehavior } from '@polymer/iron-jsonp-library/iron-jsonp-library.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+
 /*
 Dynamically loads the Google Youtube Iframe API, firing the `api-load` event when ready.
 
@@ -14,15 +19,6 @@ Any number of components can use `<google-youtube-api>` elements, and the librar
 
 https://developers.google.com/youtube/iframe_api_reference
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import '@polymer/polymer/polymer-legacy.js';
-
-import { IronJsonpLibraryBehavior } from '@polymer/iron-jsonp-library/iron-jsonp-library.js';
-import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
 Polymer({
 
   is: 'google-youtube-api',
@@ -59,7 +55,7 @@ Polymer({
   },
 
   get api() {
-    return YT;
+    return window.YT;
   }
 
 });

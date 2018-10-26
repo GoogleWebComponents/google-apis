@@ -56,7 +56,7 @@ Polymer({
   },
 
   get api() {
-    return gapi;
+    return window.gapi;
   }
 
 });
