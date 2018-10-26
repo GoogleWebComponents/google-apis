@@ -7,6 +7,20 @@ The complete set of contributors may be found at https://polymer.github.io/CONTR
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at https://polymer.github.io/PATENTS.txt
 */
+import '@polymer/polymer/polymer-legacy.js';
+
+import './google-js-api.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+
+// Stores whether the API client is done loading.
+var _clientLoaded = false;
+
+// Loaders and loading statuses for all APIs, indexed by API name.
+// This helps prevent multiple loading requests being fired at the same time
+// by multiple google-api-loader elements.
+var _statuses = {};
+var _loaders = {};
+
 /**
 Element for loading a specific client Google API with the JavaScript client library.
 
@@ -32,25 +46,6 @@ For loading `gapi.client` libraries
 
 @demo
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import '@polymer/polymer/polymer-legacy.js';
-
-import './google-js-api.js';
-import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-
-// Stores whether the API client is done loading.
-var _clientLoaded = false;
-
-// Loaders and loading statuses for all APIs, indexed by API name.
-// This helps prevent multiple loading requests being fired at the same time
-// by multiple google-api-loader elements.
-var _statuses = {};
-var _loaders = {};
-
 Polymer({
 
   is: 'google-client-loader',
@@ -136,15 +131,15 @@ Polymer({
    * Wrapper for `gapi.auth`.
    */
   get auth() {
-    return gapi.auth;
+    return window.gapi.auth;
   },
 
   ready: function() {
     this._loader = document.createElement('google-js-api');
-      
+
     if (!this.shadowRoot) { this.attachShadow({mode: 'open'}); }
     this.shadowRoot.appendChild(this._loader);
-      
+
     this.listen(this._loader, 'js-api-load', '_loadClient');
   },
 
@@ -153,7 +148,7 @@ Polymer({
   },
 
   _loadClient: function() {
-    gapi.load('client', this._doneLoadingClient.bind(this));
+    window.gapi.load('client', this._doneLoadingClient.bind(this));
   },
 
   _handleLoadResponse: function(response) {
@@ -228,7 +223,7 @@ Polymer({
         }
         _statuses[this.name] = 'loading';
         _loaders[this.name] = this;
-        gapi.client.load(this.name, this.version,
+        window.gapi.client.load(this.name, this.version,
             this._handleLoadResponse.bind(this), root);
       }
     }
