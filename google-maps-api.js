@@ -33,6 +33,8 @@ Polymer({
 
   is: 'google-maps-api',
 
+  _template: null,
+
   behaviors: [
     IronJsonpLibraryBehavior
   ],
