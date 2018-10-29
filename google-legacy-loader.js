@@ -21,6 +21,8 @@ Polymer({
 
   is: 'google-legacy-loader',
 
+  _template: null,
+
   behaviors: [
     IronJsonpLibraryBehavior
   ],

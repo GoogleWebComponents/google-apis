@@ -30,6 +30,8 @@ Polymer({
 
   is: 'google-js-api',
 
+  _template: null,
+
   behaviors: [
     IronJsonpLibraryBehavior
   ],
