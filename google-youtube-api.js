@@ -23,6 +23,8 @@ Polymer({
 
   is: 'google-youtube-api',
 
+  _template: null,
+
   behaviors: [
     IronJsonpLibraryBehavior
   ],
