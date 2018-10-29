@@ -21,6 +21,8 @@ Polymer({
 
   is: 'google-realtime-api',
 
+  _template: null,
+
   behaviors: [
     IronJsonpLibraryBehavior
   ],

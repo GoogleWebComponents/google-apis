@@ -21,6 +21,8 @@ Polymer({
 
   is: 'google-plusone-api',
 
+  _template: null,
+
   behaviors: [
     IronJsonpLibraryBehavior
   ],

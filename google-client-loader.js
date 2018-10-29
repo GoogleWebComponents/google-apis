@@ -50,6 +50,8 @@ Polymer({
 
   is: 'google-client-loader',
 
+  _template: null,
+
   /**
    * Fired when the requested API is loaded. Override this name
    * by setting `successEventName`.
