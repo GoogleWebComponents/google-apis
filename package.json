@@ -7,7 +7,11 @@
     "google",
     "apis"
   ],
-  "homepage": "https://elements.polymer-project.org/elements/google-apis?active=google-js-api",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/GoogleWebComponents/google-apis.git"
+  },
+  "homepage": "https://github.com/GoogleWebComponents/google-apis/",
   "name": "@google-web-components/google-apis",
   "version": "3.0.0",
   "resolutions": {
