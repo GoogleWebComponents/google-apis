@@ -11,7 +11,6 @@ import '@polymer/polymer/polymer-legacy.js';
 
 import { IronJsonpLibraryBehavior } from '@polymer/iron-jsonp-library/iron-jsonp-library.js';
 import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-
 /*
 Dynamically loads Google JavaScript API `gapi`, firing the `js-api-load` event when ready.
 
