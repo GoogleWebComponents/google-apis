@@ -12,4 +12,4 @@ Available APIs:
 * Google Youtube Iframe API
 
 
-See element documentation on https://www.webcomponents.org/element/GoogleWebComponents/google-apis for usage.
+See element documentation on https://www.webcomponents.org/element/@google-web-components/google-apis for usage.
