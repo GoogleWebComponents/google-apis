@@ -7,10 +7,7 @@
     "google",
     "apis"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/GoogleWebComponents/google-apis.git"
-  },
+  "repository": "GoogleWebComponents/google-apis",
   "homepage": "https://github.com/GoogleWebComponents/google-apis/",
   "name": "@google-web-components/google-apis",
   "version": "3.0.0",
