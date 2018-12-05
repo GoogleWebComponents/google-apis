@@ -10,7 +10,7 @@
   "repository": "GoogleWebComponents/google-apis",
   "homepage": "https://github.com/GoogleWebComponents/google-apis/",
   "name": "@google-web-components/google-apis",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
