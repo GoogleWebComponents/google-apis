@@ -143,7 +143,11 @@ For loading `gapi.client` libraries
         if (!this.shadowRoot) { this.attachShadow({mode: 'open'}); }
         this.shadowRoot.appendChild(this._loader);
 
-        this.listen(this._loader, 'js-api-load', '_loadClient');
+        if (this._loader.libraryLoaded) {
+          this._loadClient();
+        } else {
+          this.listen(this._loader, 'js-api-load', '_loadClient');
+        }
       },
 
       detached: function() {
