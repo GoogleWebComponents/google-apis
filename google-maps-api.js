@@ -33,6 +33,7 @@ Polymer({
 
   is: 'google-maps-api',
 
+  /** @override */
   _template: null,
 
   behaviors: [
