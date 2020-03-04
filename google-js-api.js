@@ -30,6 +30,7 @@ Polymer({
 
   is: 'google-js-api',
 
+  /** @override */
   _template: null,
 
   behaviors: [
